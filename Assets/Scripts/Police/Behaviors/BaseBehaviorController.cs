@@ -14,7 +14,10 @@ namespace Polices.Behaviors
 		private StateMachineObservalbes _stateMachineObservables;
 
 		private string baseAnimIndex = "BaseAnimIndex";
+		[SerializeField]
 		private bool AnimStateFinished = false;
+		[SerializeField]
+		private float AnimStateNormalized;
 
 		void Start ()
 		{
@@ -26,13 +29,27 @@ namespace Polices.Behaviors
 			//animationState変更時にAnimStateFinishedをfalseに変更する
 			_stateMachineObservables
 				.OnStateEnterObservable
-				.Subscribe (x => AnimStateFinished = false);
+				.Subscribe (x => {
+					AnimStateFinished = false;
+					Debug.LogWarning("AnimStateChanged");
+					});
 
 			//normalizedTimeの値を監視、1を超えたらAnimStteFinishedをtrueに変更する
 			_stateMachineObservables
 				.OnStateUpdateObservable            
 				.Where (x => x.normalizedTime >= 1)			//ステート中を監視
-				.Subscribe (x => AnimStateFinished = true);	//AnimatorのRestパラメータをTrueにする
+				.Subscribe (x => {
+					AnimStateFinished = true;
+					Debug.LogWarning("AnimStateFinished");
+				});	//AnimatorのRestパラメータをTrueにする
+
+			//normalizedTimeの値を監視、1を超えたらAnimStteFinishedをtrueに変更する
+			_stateMachineObservables
+				.OnStateUpdateObservable            
+				.Subscribe (x => {
+					AnimStateNormalized = x.normalizedTime;
+					Debug.Log(x.normalizedTime);
+				});	//AnimatorのRestパラメータをTrueにする
 		}
 
 

@@ -32,6 +32,9 @@ namespace Polices.Behaviors
 			case 2:
 				StartCoroutine (GetTea ());
 				break;
+			case 3:
+				StartCoroutine (OpeningLocker ());
+				break;
 			}
 		}
 
@@ -39,11 +42,9 @@ namespace Polices.Behaviors
 		{
 			yield return StartCoroutine (baseBehaviorController.StandUp ());
 			if(policeParams.policeStatus == PoliceStatus.PREFERENCIAL_BEHAVIOR)yield break;
-			yield return StartCoroutine (baseBehaviorController.FromStandToTarget (new Vector3 (3, 0, 3)));
+			yield return StartCoroutine (baseBehaviorController.FromStandToTarget (new Vector3 (-1.82f, 0, -1.55f)));
 			if(policeParams.policeStatus == PoliceStatus.PREFERENCIAL_BEHAVIOR)yield break;
-			yield return StartCoroutine (baseBehaviorController.FromStandToTarget (new Vector3 (0, 0, 6)));
-			if(policeParams.policeStatus == PoliceStatus.PREFERENCIAL_BEHAVIOR)yield break;
-			yield return StartCoroutine (baseBehaviorController.StartActionAnimation (new Vector3 (0, 0, 7), "Opening"));
+			yield return StartCoroutine (baseBehaviorController.StartActionAnimation (new Vector3 (-2.82f, 0, -1.55f), "Opening"));
 			if(policeParams.policeStatus == PoliceStatus.PREFERENCIAL_BEHAVIOR)yield break;
 			yield return StartCoroutine (baseBehaviorController.FromActionToSheet (policeParams.sheetPosition));
 			if(policeParams.policeStatus == PoliceStatus.PREFERENCIAL_BEHAVIOR)yield break;
@@ -55,11 +56,25 @@ namespace Polices.Behaviors
 		{
 			yield return StartCoroutine (baseBehaviorController.StandUp ());
 			if(policeParams.policeStatus == PoliceStatus.PREFERENCIAL_BEHAVIOR)yield break;
-			yield return StartCoroutine (baseBehaviorController.FromStandToTarget (new Vector3 (-3, 0, 3)));
+			yield return StartCoroutine (baseBehaviorController.FromStandToTarget (new Vector3 (-1.48f, 0, -0.66f)));
 			if(policeParams.policeStatus == PoliceStatus.PREFERENCIAL_BEHAVIOR)yield break;
-			yield return StartCoroutine (baseBehaviorController.FromStandToTarget (new Vector3 (0, 0, 6)));
+			yield return StartCoroutine (baseBehaviorController.FromStandToTarget (new Vector3 (-1.97f, 0, -2.81f)));
 			if(policeParams.policeStatus == PoliceStatus.PREFERENCIAL_BEHAVIOR)yield break;
-			yield return StartCoroutine (baseBehaviorController.StartActionAnimation (new Vector3 (0, 0, 7), "Bartending"));
+			yield return StartCoroutine (baseBehaviorController.StartActionAnimation (new Vector3 (-2.97f, 0, -2.81f), "Bartending"));
+			if(policeParams.policeStatus == PoliceStatus.PREFERENCIAL_BEHAVIOR)yield break;
+			yield return StartCoroutine (baseBehaviorController.FromActionToSheet (policeParams.sheetPosition));
+			if(policeParams.policeStatus == PoliceStatus.PREFERENCIAL_BEHAVIOR)yield break;
+			yield return StartCoroutine (baseBehaviorController.SitDown (policeParams.sheetDirection));
+			if(policeParams.policeStatus == PoliceStatus.PREFERENCIAL_BEHAVIOR)yield break;
+		}
+
+		private IEnumerator OpeningLocker ()
+		{
+			yield return StartCoroutine (baseBehaviorController.StandUp ());
+			if(policeParams.policeStatus == PoliceStatus.PREFERENCIAL_BEHAVIOR)yield break;
+			yield return StartCoroutine (baseBehaviorController.FromStandToTarget (new Vector3 (2.3f, 0, -1.55f)));
+			if(policeParams.policeStatus == PoliceStatus.PREFERENCIAL_BEHAVIOR)yield break;
+			yield return StartCoroutine (baseBehaviorController.StartActionAnimation (new Vector3 (3.3f, 0, -1.55f), "Opening"));
 			if(policeParams.policeStatus == PoliceStatus.PREFERENCIAL_BEHAVIOR)yield break;
 			yield return StartCoroutine (baseBehaviorController.FromActionToSheet (policeParams.sheetPosition));
 			if(policeParams.policeStatus == PoliceStatus.PREFERENCIAL_BEHAVIOR)yield break;

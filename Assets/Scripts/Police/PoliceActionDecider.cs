@@ -35,7 +35,7 @@ namespace Polices.Decider
 
 
 		public void StartActionRandomly(){
-			baseBehaviorGenerator.BeginBaseBehavior(Random.Range(1,3));
+			baseBehaviorGenerator.BeginBaseBehavior(Random.Range(1,4));
 		}
 
 		public void StartPrefentialBehavior(){
