@@ -15,9 +15,12 @@ namespace Polices.Behaviors
 
 		private string baseAnimIndex = "BaseAnimIndex";
 		[SerializeField]
+		private bool isAnimStateChanging = true;
+		[SerializeField]
 		private bool AnimStateFinished = false;
 		[SerializeField]
 		private float AnimStateNormalized;
+		private float preNormalizedTime;
 
 		void Start ()
 		{
@@ -26,36 +29,48 @@ namespace Polices.Behaviors
 			_animator = GetComponent <Animator> ();
 			_stateMachineObservables = _animator.GetBehaviour <StateMachineObservalbes> ();
 
-			//animationState変更時にAnimStateFinishedをfalseに変更する
+			//
 			_stateMachineObservables
 				.OnStateEnterObservable
 				.Subscribe (x => {
 					AnimStateFinished = false;
-					Debug.LogWarning("AnimStateChanged");
-					});
+					isAnimStateChanging = true;
+				});
+
+			//animationState変更時にAnimStateFinishedをfalseに変更する
+			_stateMachineObservables
+				.OnStateExitObservable
+				.Subscribe (x => {
+				AnimStateFinished = false;
+				isAnimStateChanging = false;
+//				Debug.LogWarning ("AnimStateChanged : " + AnimStateFinished);
+			});
 
 			//normalizedTimeの値を監視、1を超えたらAnimStteFinishedをtrueに変更する
 			_stateMachineObservables
-				.OnStateUpdateObservable            
-				.Where (x => x.normalizedTime >= 1)			//ステート中を監視
+				.OnStateUpdateObservable 
+				.Where(x => x.normalizedTime > 1)
+				.Where(x => isAnimStateChanging == false)
 				.Subscribe (x => {
 					AnimStateFinished = true;
-					Debug.LogWarning("AnimStateFinished");
-				});	//AnimatorのRestパラメータをTrueにする
+//					Debug.LogWarning ("AnimStateFinished : " + AnimStateFinished);
+				preNormalizedTime = x.normalizedTime;
+			});	//AnimatorのRestパラメータをTrueにする
 
-			//normalizedTimeの値を監視、1を超えたらAnimStteFinishedをtrueに変更する
+			//normalizedTimeの値を監視
 			_stateMachineObservables
 				.OnStateUpdateObservable            
 				.Subscribe (x => {
-					AnimStateNormalized = x.normalizedTime;
-					Debug.Log(x.normalizedTime);
-				});	//AnimatorのRestパラメータをTrueにする
+				AnimStateNormalized = x.normalizedTime;
+//				Debug.Log (x.normalizedTime);
+			});	
 		}
 
 
 		private IEnumerator WaitTillAnimFinish ()
 		{
 			for (;;) {
+				//Debug.Log(AnimStateFinished);
 				if (AnimStateFinished == true)
 					break;
 				if (policeParams.policeStatus == PoliceStatus.PREFERENCIAL_BEHAVIOR)
@@ -89,11 +104,12 @@ namespace Polices.Behaviors
 			for (;;) {
 				Quaternion currentRotation = Quaternion.RotateTowards (this.transform.rotation, targetRotation, rotateSpeed * Time.deltaTime);
 				this.transform.rotation = currentRotation;
+				//Debug.Log("this = " + this.transform.rotation + ", targetRotation = " + targetRotation );
 				if (this.transform.rotation == targetRotation) {
 					break;
 				}
 				if (policeParams.policeStatus == PoliceStatus.PREFERENCIAL_BEHAVIOR)
-					yield break;
+					break;
 				yield return null;
 			}
 			Destroy (target);
@@ -107,6 +123,7 @@ namespace Polices.Behaviors
 			//立ち上がる
 			_animator.SetInteger (baseAnimIndex, 1);
 			//待機
+			AnimStateFinished = false;
 			yield return StartCoroutine (WaitTillAnimFinish ());
 		}
 
@@ -132,6 +149,7 @@ namespace Polices.Behaviors
 			//アニメーション開始
 			_animator.SetBool (animName, true);
 			//待機
+			Debug.Log ("hoge");
 			AnimStateFinished = false;
 			yield return StartCoroutine (WaitTillAnimFinish ());
 			//アニメーション終了
@@ -158,6 +176,7 @@ namespace Polices.Behaviors
 			//座るアニメーションスタート
 			_animator.SetInteger (baseAnimIndex, 7);
 			//待機
+			AnimStateFinished = false;
 			yield return StartCoroutine (WaitTillAnimFinish ());
 			//workアニメーションスタート
 			_animator.SetInteger (baseAnimIndex, 8);

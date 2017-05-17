@@ -52,6 +52,20 @@ namespace Polices.Behaviors
 			if(policeParams.policeStatus == PoliceStatus.PREFERENCIAL_BEHAVIOR)yield break;
 		}
 
+		private IEnumerator OpeningLocker ()
+		{
+			yield return StartCoroutine (baseBehaviorController.StandUp ());
+			if(policeParams.policeStatus == PoliceStatus.PREFERENCIAL_BEHAVIOR)yield break;
+			yield return StartCoroutine (baseBehaviorController.FromStandToTarget (new Vector3 (2.3f, 0, -1.55f)));
+			if(policeParams.policeStatus == PoliceStatus.PREFERENCIAL_BEHAVIOR)yield break;
+			yield return StartCoroutine (baseBehaviorController.StartActionAnimation (new Vector3 (3.3f, 0, -1.55f), "Opening"));
+			if(policeParams.policeStatus == PoliceStatus.PREFERENCIAL_BEHAVIOR)yield break;
+			yield return StartCoroutine (baseBehaviorController.FromActionToSheet (policeParams.sheetPosition));
+			if(policeParams.policeStatus == PoliceStatus.PREFERENCIAL_BEHAVIOR)yield break;
+			yield return StartCoroutine (baseBehaviorController.SitDown (policeParams.sheetDirection));
+			if(policeParams.policeStatus == PoliceStatus.PREFERENCIAL_BEHAVIOR)yield break;
+		}
+
 		private IEnumerator GetTea ()
 		{
 			yield return StartCoroutine (baseBehaviorController.StandUp ());
@@ -68,18 +82,6 @@ namespace Polices.Behaviors
 			if(policeParams.policeStatus == PoliceStatus.PREFERENCIAL_BEHAVIOR)yield break;
 		}
 
-		private IEnumerator OpeningLocker ()
-		{
-			yield return StartCoroutine (baseBehaviorController.StandUp ());
-			if(policeParams.policeStatus == PoliceStatus.PREFERENCIAL_BEHAVIOR)yield break;
-			yield return StartCoroutine (baseBehaviorController.FromStandToTarget (new Vector3 (2.3f, 0, -1.55f)));
-			if(policeParams.policeStatus == PoliceStatus.PREFERENCIAL_BEHAVIOR)yield break;
-			yield return StartCoroutine (baseBehaviorController.StartActionAnimation (new Vector3 (3.3f, 0, -1.55f), "Opening"));
-			if(policeParams.policeStatus == PoliceStatus.PREFERENCIAL_BEHAVIOR)yield break;
-			yield return StartCoroutine (baseBehaviorController.FromActionToSheet (policeParams.sheetPosition));
-			if(policeParams.policeStatus == PoliceStatus.PREFERENCIAL_BEHAVIOR)yield break;
-			yield return StartCoroutine (baseBehaviorController.SitDown (policeParams.sheetDirection));
-			if(policeParams.policeStatus == PoliceStatus.PREFERENCIAL_BEHAVIOR)yield break;
-		}
+
 	}
 }
