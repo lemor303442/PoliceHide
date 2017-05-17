@@ -1,0 +1,11 @@
+﻿namespace Polices{
+	public enum PoliceStatus {
+		NONE,
+		TO_SHEET,
+		IDLE,
+		BASIC_BEHAVIOR_TO,
+		DURING_BASIC_BEHAVIOR,
+		BASIC_BEHAVIOR_FROM,
+		PREFERENCIAL_BEHAVIOR,
+	}
+}
