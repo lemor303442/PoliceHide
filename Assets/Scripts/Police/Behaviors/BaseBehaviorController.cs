@@ -99,7 +99,7 @@ namespace Polices.Behaviors
 				Quaternion currentRotation = Quaternion.RotateTowards (this.transform.rotation, targetRotation, rotateSpeed * Time.deltaTime);
 				this.transform.rotation = currentRotation;
 				//Debug.Log("this = " + this.transform.rotation + ", targetRotation = " + targetRotation );
-				if (this.transform.rotation == targetRotation) {
+				if ((this.transform.eulerAngles.y - targetRotation.eulerAngles.y)%360 == 0) {
 					break;
 				}
 				if (policeParams.policeStatus == PoliceStatus.PREFERENCIAL_BEHAVIOR)

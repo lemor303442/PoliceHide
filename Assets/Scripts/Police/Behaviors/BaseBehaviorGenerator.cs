@@ -42,8 +42,6 @@ namespace Polices.Behaviors
 					sheetDirection = new Vector3 (float.Parse (policeSheetPosition [i, 4]), float.Parse (policeSheetPosition [i, 5]), float.Parse (policeSheetPosition [i, 6]));
 				}
 			}
-			Debug.Log (sheetPosition);
-			Debug.Log (sheetDirection);
 		}
 
 		private void CreateRouteArray (int policeID, string animName)
