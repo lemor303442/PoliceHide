@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class CameraController : MonoBehaviour {
 	public GameObject player;
+	[SerializeField]
+	Vector3 cameraPos;
 
 	// Use this for initialization
 	void Start () {
@@ -12,6 +14,6 @@ public class CameraController : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		this.gameObject.transform.position = new Vector3 (player.transform.position.x, 2.77f, -7.55f);
+		this.gameObject.transform.position = new Vector3 (player.transform.position.x, cameraPos.y, cameraPos.z);
 	}
 }
