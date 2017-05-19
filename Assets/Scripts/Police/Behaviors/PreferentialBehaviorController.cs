@@ -12,8 +12,13 @@ namespace Polices.Behaviors
 		private Animator _animator;
 		private StateMachineObservalbes _stateMachineObservables;
 
+		private string baseAnimIndex = "BaseAnimIndex";
 		private string poopAnimIndex = "PoopAnimIndex";
-		private bool AnimStateFinished = false;
+
+		public bool isAnimStateChanging = true;
+		public bool AnimStateFinished = false;
+		private float AnimStateNormalized;
+		private float preNormalizedTime;
 
 		void Start ()
 		{
@@ -22,16 +27,32 @@ namespace Polices.Behaviors
 			_animator = GetComponent <Animator> ();
 			_stateMachineObservables = _animator.GetBehaviour <StateMachineObservalbes> ();
 
-			//animationState変更時にAnimStateFinishedをfalseに変更する
 			_stateMachineObservables
 				.OnStateEnterObservable
-				.Subscribe (x => AnimStateFinished = false);
+				.Subscribe (x => {
+					AnimStateFinished = false;
+					isAnimStateChanging = true;
+				});
+
+			//animationState変更時にAnimStateFinishedをfalseに変更する
+			_stateMachineObservables
+				.OnStateExitObservable
+				.Subscribe (x => {
+					AnimStateFinished = false;
+					isAnimStateChanging = false;
+					//				Debug.LogWarning ("AnimStateChanged : " + AnimStateFinished);
+				});
 
 			//normalizedTimeの値を監視、1を超えたらAnimStteFinishedをtrueに変更する
 			_stateMachineObservables
-				.OnStateUpdateObservable            
-				.Where (x => x.normalizedTime >= 1)			//ステート中を監視
-				.Subscribe (x => AnimStateFinished = true);	//AnimatorのRestパラメータをTrueにする
+				.OnStateUpdateObservable 
+				.Where(x => x.normalizedTime > 1)
+				.Where(x => isAnimStateChanging == false)
+				.Subscribe (x => {
+					AnimStateFinished = true;
+					//					Debug.LogWarning ("AnimStateFinished : " + AnimStateFinished);
+					preNormalizedTime = x.normalizedTime;
+				});	//AnimatorのRestパラメータをTrueにする
 		}
 
 
@@ -82,6 +103,8 @@ namespace Polices.Behaviors
 			_animator.SetInteger(poopAnimIndex,1);
 			yield return null;
 			_animator.SetInteger(poopAnimIndex,2);
+			isAnimStateChanging = false;
+			AnimStateFinished = false;
 			yield return StartCoroutine (WaitTillAnimFinish ());
 		}
 
@@ -101,7 +124,38 @@ namespace Polices.Behaviors
 			//拾うアニメーション
 			_animator.SetInteger(poopAnimIndex,5);
 			//アニメーション終了待ち
+			AnimStateFinished = false;
 			yield return StartCoroutine (WaitTillAnimFinish ());
+			//baseAnim系列にアニメーションへ戻す
+			_animator.SetTrigger("PrefentialAnimFinished");
+		}
+
+		public IEnumerator FromActionToSheet (Vector3 targetPos)
+		{
+			//回転アニメーションスタート
+			_animator.SetInteger (baseAnimIndex, 4);
+			//回転する
+			yield return StartCoroutine (LookAt (targetPos));
+			//WALKアニメーションスタート
+			_animator.SetInteger (baseAnimIndex, 5);
+			//歩く
+			yield return StartCoroutine (WalkTo (targetPos, 1));
+		}
+
+		public IEnumerator SitDown (Vector3 targetPos)
+		{
+			//回転アニメーションスタート
+			_animator.SetInteger (baseAnimIndex, 6);
+			//回転する
+			yield return StartCoroutine (LookAt (targetPos));
+			//座るアニメーションスタート
+			_animator.SetInteger (baseAnimIndex, 7);
+			//待機
+			AnimStateFinished = false;
+			yield return StartCoroutine (WaitTillAnimFinish ());
+			//workアニメーションスタート
+			_animator.SetInteger (baseAnimIndex, 8);
+			policeParams.policeStatus = PoliceStatus.IDLE;
 		}
 	}
 }

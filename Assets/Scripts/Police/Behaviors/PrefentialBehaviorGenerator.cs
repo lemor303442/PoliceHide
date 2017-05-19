@@ -11,16 +11,19 @@ namespace Polices.Behaviors
 		PreferentialBehaviorController preferentialBehaviorController;
 		PoliceParams policeParams;
 
-		void Start(){
+		void Start ()
+		{
 			preferentialBehaviorController = GetComponent<PreferentialBehaviorController> ();
 			policeParams = GetComponent<PoliceParams> ();
 		}
 
 		public IEnumerator Poop (Vector3 targetPos)
 		{
-			yield return StartCoroutine(preferentialBehaviorController.StartLookAround());
-			yield return StartCoroutine(preferentialBehaviorController.WalkToTarget(targetPos));
-			yield return StartCoroutine(preferentialBehaviorController.StartPickUpAnimation());
+			yield return StartCoroutine (preferentialBehaviorController.StartLookAround ());
+			yield return StartCoroutine (preferentialBehaviorController.WalkToTarget (targetPos));
+			yield return StartCoroutine (preferentialBehaviorController.StartPickUpAnimation ());
+			yield return StartCoroutine (preferentialBehaviorController.FromActionToSheet (policeParams.sheetPosition));
+			yield return StartCoroutine (preferentialBehaviorController.SitDown(policeParams.sheetDirection));
 		}
 	}
 }
