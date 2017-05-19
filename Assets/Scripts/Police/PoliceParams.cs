@@ -7,12 +7,10 @@ namespace Polices
 {
 	public class PoliceParams : MonoBehaviour
 	{
+		public int policeID;
 		public PoliceStatus policeStatus = PoliceStatus.NONE;
 		public PoliceStatus prePoliceStatus = PoliceStatus.NONE;
 		public PoliceStatus policeStatusTransfer = PoliceStatus.NONE;
-
-		public Vector3 sheetPosition;
-		public Vector3 sheetDirection;
 
 		void Start ()
 		{

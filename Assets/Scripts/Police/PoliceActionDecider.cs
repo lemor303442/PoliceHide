@@ -17,12 +17,6 @@ namespace Polices.Decider
 
 		Rigidbody rigidbody;
 
-		/// <summary>
-		/// baseBehaviorのID
-		/// 0:idle
-		/// 1:お茶を入れる
-		/// </summary>
-		private int BaseBehaviorId = 0;
 		float policeStatusChangedTime;
 
 		void Start(){
@@ -30,7 +24,6 @@ namespace Polices.Decider
 			preferentialBehaviorGenerator = GetComponent<PrefentialBehaviorGenerator>();
 			policeParams = GetComponent<PoliceParams>();
 			policeParams.policeStatus = PoliceStatus.IDLE;
-
 		}
 
 

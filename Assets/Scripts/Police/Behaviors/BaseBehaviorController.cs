@@ -57,13 +57,7 @@ namespace Polices.Behaviors
 				preNormalizedTime = x.normalizedTime;
 			});	//AnimatorのRestパラメータをTrueにする
 
-			//normalizedTimeの値を監視
-			_stateMachineObservables
-				.OnStateUpdateObservable            
-				.Subscribe (x => {
-				AnimStateNormalized = x.normalizedTime;
-//				Debug.Log (x.normalizedTime);
-			});	
+
 		}
 
 
@@ -149,7 +143,6 @@ namespace Polices.Behaviors
 			//アニメーション開始
 			_animator.SetBool (animName, true);
 			//待機
-			Debug.Log ("hoge");
 			AnimStateFinished = false;
 			yield return StartCoroutine (WaitTillAnimFinish ());
 			//アニメーション終了
@@ -159,6 +152,8 @@ namespace Polices.Behaviors
 		public IEnumerator FromActionToSheet (Vector3 targetPos)
 		{
 			policeParams.policeStatus = PoliceStatus.BASIC_BEHAVIOR_FROM;
+			//回転アニメーションスタート
+			_animator.SetInteger (baseAnimIndex, 4);
 			//回転する
 			yield return StartCoroutine (LookAt (targetPos));
 			//WALKアニメーションスタート
