@@ -20,7 +20,7 @@ namespace Polices.Behaviors
 		private float AnimStateNormalized;
 		private float preNormalizedTime;
 
-		void Start ()
+		public void Init ()
 		{
 			policeParams = GetComponent<PoliceParams>();
 
@@ -34,7 +34,6 @@ namespace Polices.Behaviors
 					isAnimStateChanging = true;
 				});
 
-			//animationState変更時にAnimStateFinishedをfalseに変更する
 			_stateMachineObservables
 				.OnStateExitObservable
 				.Subscribe (x => {
