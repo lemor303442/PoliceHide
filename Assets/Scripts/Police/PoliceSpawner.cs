@@ -24,7 +24,7 @@ namespace Polices
 			spawnPosition [0] = new Vector3 (-4, 0, 4);
 			spawnPosition [1] = new Vector3 (4, 0, 4);
 
-			nextInterval = Random.Range (10, 30);
+			nextInterval = Random.Range (3, 8);
 		}
 	
 		// Update is called once per frame
