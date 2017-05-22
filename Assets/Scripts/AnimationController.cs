@@ -5,6 +5,7 @@ using UniRx;
 
 public class AnimationController : MonoBehaviour {
 	private Animator _animator;
+	AnimatorStateInfo animInfo;
 	private StateMachineObservalbes _stateMachineObservables;
 	[SerializeField]
 	private bool isAnimStateChanging = true;
@@ -59,6 +60,17 @@ public class AnimationController : MonoBehaviour {
 			preNormalizedTime = x.normalizedTime;
 		});
 		
+	}
+	void Update(){
+		animInfo = _animator.GetCurrentAnimatorStateInfo(0);
+	}
+
+	void OnTriggerStay(Collider other){
+		if (other.gameObject.tag == "Eyesite") {
+			if (animInfo.nameHash != Animator.StringToHash ("Base Layer.Grounded")) {
+				Debug.Log ("GameOver");
+			}
+		}
 	}
 
 	public void ButtonClick(int id){
