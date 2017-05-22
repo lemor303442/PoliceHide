@@ -14,15 +14,11 @@ namespace Polices.Behaviors
 		private StateMachineObservalbes _stateMachineObservables;
 
 		private string baseAnimIndex = "BaseAnimIndex";
-		[SerializeField]
 		private bool isAnimStateChanging = true;
-		[SerializeField]
 		private bool AnimStateFinished = false;
-		[SerializeField]
 		private float AnimStateNormalized;
-		private float preNormalizedTime;
 
-		void Start ()
+		public void Init ()
 		{
 			policeParams = GetComponent<PoliceParams> ();
 
@@ -43,18 +39,16 @@ namespace Polices.Behaviors
 				.Subscribe (x => {
 				AnimStateFinished = false;
 				isAnimStateChanging = false;
-//				Debug.LogWarning ("AnimStateChanged : " + AnimStateFinished);
 			});
 
 			//normalizedTimeの値を監視、1を超えたらAnimStteFinishedをtrueに変更する
 			_stateMachineObservables
 				.OnStateUpdateObservable 
 				.Where(x => x.normalizedTime > 1)
-				.Where(x => isAnimStateChanging == false)
+				.Where(x => !AnimStateFinished)
+				.Where(x => !isAnimStateChanging)
 				.Subscribe (x => {
 					AnimStateFinished = true;
-//					Debug.LogWarning ("AnimStateFinished : " + AnimStateFinished);
-				preNormalizedTime = x.normalizedTime;
 			});	//AnimatorのRestパラメータをTrueにする
 
 
@@ -64,7 +58,6 @@ namespace Polices.Behaviors
 		private IEnumerator WaitTillAnimFinish ()
 		{
 			for (;;) {
-				//Debug.Log(AnimStateFinished);
 				if (AnimStateFinished == true)
 					break;
 				if (policeParams.policeStatus == PoliceStatus.PREFERENCIAL_BEHAVIOR)
@@ -151,6 +144,7 @@ namespace Polices.Behaviors
 
 		public IEnumerator FromActionToSheet (Vector3 targetPos)
 		{
+			if(policeParams.policeStatus != PoliceStatus.TO_SHEET)
 			policeParams.policeStatus = PoliceStatus.BASIC_BEHAVIOR_FROM;
 			//回転アニメーションスタート
 			_animator.SetInteger (baseAnimIndex, 4);
@@ -176,6 +170,11 @@ namespace Polices.Behaviors
 			//workアニメーションスタート
 			_animator.SetInteger (baseAnimIndex, 8);
 			policeParams.policeStatus = PoliceStatus.IDLE;
+		}
+
+		public void SpawnedOutside(){
+			policeParams.policeStatus = PoliceStatus.TO_SHEET;
+			_animator.SetTrigger("PrefentialAnimFinished");
 		}
 	}
 }

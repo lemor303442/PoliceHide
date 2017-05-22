@@ -11,9 +11,10 @@ namespace Polices.Behaviors
 		PreferentialBehaviorController preferentialBehaviorController;
 		PoliceParams policeParams;
 
-		void Start ()
+		public void Init ()
 		{
 			preferentialBehaviorController = GetComponent<PreferentialBehaviorController> ();
+			preferentialBehaviorController.Init();
 			policeParams = GetComponent<PoliceParams> ();
 		}
 
