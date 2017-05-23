@@ -16,6 +16,7 @@ public class AnimationController : MonoBehaviour {
 	private PlaySceneController playSceneController;
 	float preNormalizedTime;
 	int count = 1;
+	int NowAnimation = 0;
 
 	void Start(){
 		_animator = GetComponent <Animator> ();
@@ -68,7 +69,7 @@ public class AnimationController : MonoBehaviour {
 	void OnTriggerStay(Collider other){
 		if (other.gameObject.tag == "Eyesite") {
 			if (animInfo.nameHash != Animator.StringToHash ("Base Layer.Grounded")) {
-				Debug.Log ("GameOver");
+				playSceneController.GameOver ();
 			}
 		}
 	}
@@ -76,14 +77,42 @@ public class AnimationController : MonoBehaviour {
 	public void ButtonClick(int id){
 		count = 0;
 		isButtonPressed = !isButtonPressed;
+		NowAnimation = id;
 		//どのボタンが押されたかを判断
-		_animator.SetBool("Dance",true);
+		switch (NowAnimation) {
+		case 1:
+			_animator.SetBool ("Dance", true);
+			break;
+		case 2:
+			_animator.SetBool ("JoyJump", true);
+			break;
+		case 3:
+			_animator.SetBool ("HeadSpin", true);
+			break;
+		case 4:
+			_animator.SetBool ("FallFlat", true);
+			break;
+		}
 	}
 
 	public void ButtonClickUp(int id){
-		_animator.SetBool("Dance",false);
-		playSceneController.CheckScore(id,count);
+		switch (NowAnimation) {
+		case 1:
+			_animator.SetBool ("Dance", false);
+			break;
+		case 2:
+			_animator.SetBool ("JoyJump", false);
+			break;
+		case 3:
+			_animator.SetBool ("HeadSpin", false);
+			break;
+		case 4:
+			_animator.SetBool ("FallFlat", false);
+			break;
+		}
+		playSceneController.CheckScore(NowAnimation,count);
 		count = 0;
+		NowAnimation = 0;
 		//hashと何回連続で行ったか
 	}
 }
