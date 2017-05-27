@@ -30,6 +30,7 @@ namespace Polices
 		// Update is called once per frame
 		void Update ()
 		{
+			Debug.Log(Input.acceleration);
 			if (policeID < 4) {
 				timer += Time.deltaTime;
 				if (timer > nextInterval) {
