@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ActionDicisionEvents : MonoBehaviour {
+public class PoliceActionManager : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {

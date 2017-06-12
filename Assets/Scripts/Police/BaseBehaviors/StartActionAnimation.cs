@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PoliceMoveEvents : MonoBehaviour {
+public class StartActionAnimation : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
