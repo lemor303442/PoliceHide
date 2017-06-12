@@ -46,6 +46,9 @@ public class PlaySceneController : MonoBehaviour {
 	public void Home(){
 		SceneManager.LoadScene ("Title");
 	}
+	public void Animation(){
+		SceneManager.LoadScene ("AniamtionSelect");
+	}
 	public void CheckScore(int id,int count){
 		switch (id) {
 		case 1:

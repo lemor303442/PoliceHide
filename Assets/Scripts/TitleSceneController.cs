@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-public class TitleSceanController : MonoBehaviour {
+public class TitleSceneController : MonoBehaviour {
 	public Text gametitle;
 	// Use this for initialization
 	void Start () {
