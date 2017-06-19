@@ -38,8 +38,6 @@ public class ScrollViewController : MonoBehaviour
 	[SerializeField]
 	private int scrollPhase = 5;
 
-	public Text text;
-
 	void Start ()
 	{
 		scrollTarget = this.transform.FindChild ("Content");
@@ -50,7 +48,6 @@ public class ScrollViewController : MonoBehaviour
 
 	void Update ()
 	{
-		text.text = scrollPhase.ToString();
 		switch (scrollPhase) {
 		case 0:
 			//待機中
@@ -197,5 +194,9 @@ public class ScrollViewController : MonoBehaviour
 		} else {
 			scrollOverRatio = 1;
 		}
+	}
+
+	public void PointerDown(){
+		Debug.Log("Touched Down");
 	}
 }
