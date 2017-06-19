@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UniRx;
+using UnityEngine.UI;
 
 public class AnimationController : MonoBehaviour {
 	private Animator _animator;
@@ -17,6 +18,9 @@ public class AnimationController : MonoBehaviour {
 	float preNormalizedTime;
 	int count = 1;
 	int NowAnimation = 0;
+	public GameObject slider_canvas;
+	public Slider slider;
+	public GameObject main_camera;
 
 	void Start(){
 		_animator = GetComponent <Animator> ();
@@ -63,13 +67,19 @@ public class AnimationController : MonoBehaviour {
 		
 	}
 	void Update(){
+		slider_canvas.transform.LookAt(main_camera.transform);
 		animInfo = _animator.GetCurrentAnimatorStateInfo(0);
+		if (animInfo.nameHash != Animator.StringToHash ("Base Layer.Grounded")) {
+			slider.value = animInfo.normalizedTime - count;
+		}
 	}
 
 	void OnTriggerStay(Collider other){
 		if (other.gameObject.tag == "Eyesite") {
 			if (animInfo.nameHash != Animator.StringToHash ("Base Layer.Grounded")) {
-				playSceneController.GameOver ();
+				_animator.SetTrigger ("pray");
+				slider.enabled = false;
+				//playSceneController.GameOver ();
 			}
 		}
 	}

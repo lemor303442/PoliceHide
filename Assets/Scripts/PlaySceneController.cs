@@ -14,7 +14,7 @@ public class PlaySceneController : MonoBehaviour {
 	int score = 0;
 	// Use this for initialization
 	void Start () {
-		
+		SceneManager.LoadScene("Stage", LoadSceneMode.Additive); 
 	}
 	
 	// Update is called once per frame
@@ -38,7 +38,11 @@ public class PlaySceneController : MonoBehaviour {
 
 	public void GameOver(){
 		gameover_image.SetActive (true);
-		finish_score_text.text = "Score : " + score.ToString();
+		finish_score_text.text = "Score : " + DataManager.instance.Score;
+		if (DataManager.instance.Score < score) {
+			finish_score_text.text = "Score : " + score;
+			DataManager.instance.Score = score;
+		}
 	}
 	public void Retry(){
 		SceneManager.LoadScene ("Play");

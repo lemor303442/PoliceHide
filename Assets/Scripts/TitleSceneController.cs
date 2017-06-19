@@ -6,13 +6,18 @@ using UnityEngine.UI;
 
 public class TitleSceneController : MonoBehaviour {
 	public Text gametitle;
+	public Text highscore;
 	// Use this for initialization
-	void Start () {
+
+
+	void Start (){
+		
 		if (Application.systemLanguage == SystemLanguage.Japanese) {
 			gametitle.text = "警察早くやめてぇー";
 		} else {
 			gametitle.text = "I am Police";
 		}
+		highscore.text = DataManager.instance.Score.ToString();
 	}
 	
 	// Update is called once per frame
