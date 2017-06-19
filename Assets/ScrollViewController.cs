@@ -6,9 +6,11 @@ using UnityEngine.UI;
 public class ScrollViewController : MonoBehaviour
 {
 
-	Transform scrollTarget;
 	RectTransform scrollTargetRect;
 	float scrollViewWidth;
+
+	float screenRatio;
+	public CanvasScaler canvasScaler;
 
 	Vector2 touchStartPos;
 	Vector2 touchEndPos;
@@ -38,20 +40,54 @@ public class ScrollViewController : MonoBehaviour
 	[SerializeField]
 	private int scrollPhase = 5;
 
+	ScrollViewTouchInput scrollViewTouchInput = new ScrollViewTouchInput();
+
+	public Text[] text;
+	bool testBool;
+
 	void Start ()
 	{
-		scrollTarget = this.transform.FindChild ("Content");
-		scrollTargetRect = scrollTarget.gameObject.GetComponent<RectTransform> ();
+		//set screen ratio;
+		if (Screen.width * (canvasScaler.referenceResolution.y / canvasScaler.referenceResolution.x) <= Screen.height) {
+			screenRatio = canvasScaler.referenceResolution.x/Screen.width;
+		} else {
+			screenRatio = canvasScaler.referenceResolution.y/Screen.height;
+		}
+
+		scrollTargetRect = this.transform.FindChild ("Content").GetComponent<RectTransform> ();
 		scrollViewWidth = this.gameObject.GetComponent<RectTransform> ().rect.width;
 		SetMovableDistance ();
+
+		//ScrollViewTouchInputに初期値を渡す
+		scrollViewTouchInput.screenToCanvasRatio = screenRatio;
+		scrollViewTouchInput.canvasSize = new Vector2(canvasScaler.referenceResolution.x, canvasScaler.referenceResolution.y);
+		scrollViewTouchInput.targetRect = this.gameObject.GetComponent<RectTransform>();
+		scrollViewTouchInput.affordTime = 0.2f;
+		scrollViewTouchInput.affordSize = new Vector2(30,30);
+
+		text [0].text = "scrollViewWidth = " + scrollViewWidth.ToString ();
+		text [1].text = "Screen.Width = " + Screen.width.ToString ();
+	}
+
+	public void TestButton ()
+	{
+		testBool = !testBool;
 	}
 
 	void Update ()
 	{
+		Debug.Log(scrollViewTouchInput.StartScroll);
+		if (testBool) {
+			text [2].text = "scrollViewWidth";
+		} else {
+			text [2].text = "Screen.Width";
+		}
+		scrollViewTouchInput.Update();
+
 		switch (scrollPhase) {
 		case 0:
 			//待機中
-			if (Input.GetMouseButton (0))
+			if (scrollViewTouchInput.StartScroll)
 				scrollPhase++;
 			break;
 		case 1:
@@ -117,26 +153,32 @@ public class ScrollViewController : MonoBehaviour
 		}
 	}
 
+	public void TestScrollTargetMove ()
+	{
+		this.GetComponent<RectTransform> ().localPosition += new Vector3 (-100, 0, 0);
+	}
+
 
 
 	void ScrollTarget (int frameDifference)
 	{
-		float moveDistance = ((touchingPos.x - preTouchingPos [frameDifference - 1].x) / frameDifference) * scrollVelocity * scrollOverRatio;
-		scrollTarget.position += new Vector3 (moveDistance, 0, 0);
+		float moveDistance = (((touchingPos.x - preTouchingPos [frameDifference - 1].x) * screenRatio) / frameDifference) * scrollVelocity * scrollOverRatio;
+		scrollTargetRect.localPosition += new Vector3 (moveDistance, 0, 0);
 	}
 
 	void ScrollTargetBack ()
 	{
 		SetScrollOverRatio ();
 		float scrollBackRatio = 1 - scrollOverRatio;
-		float scrollBackSpeed = scrollViewWidth / 1.3f;
+		float scrollBackSpeed;
+		scrollBackSpeed = scrollViewWidth;
 		float moveDistance;
 		if (scrollTargetRect.localPosition.x > 0) {
 			moveDistance = -scrollBackRatio * scrollBackSpeed * Time.deltaTime;
 		} else {
 			moveDistance = scrollBackRatio * scrollBackSpeed * Time.deltaTime;
 		}
-		scrollTarget.position += new Vector3 (moveDistance, 0, 0);
+		scrollTargetRect.localPosition += new Vector3 (moveDistance, 0, 0);
 	}
 
 	void SetDecelateRatio (int frameDifference)
@@ -145,7 +187,7 @@ public class ScrollViewController : MonoBehaviour
 		float minDecelateRatio = 0.3f;
 		float maxDecelateRatio = 0.9f;
 		//endSpeedは20をMAXとする
-		float endSpeed = Mathf.Abs ((touchingPos.x - preTouchingPos [frameDifference - 1].x) / frameDifference);
+		float endSpeed = Mathf.Abs (((touchingPos.x - preTouchingPos [frameDifference - 1].x) * screenRatio) / frameDifference);
 		float maxEndSpeed = 10;
 		endSpeed = Mathf.Clamp (endSpeed, 0, maxEndSpeed);
 		decelateRatio = minDecelateRatio + endSpeed / maxEndSpeed * (maxDecelateRatio - minDecelateRatio);
@@ -164,12 +206,12 @@ public class ScrollViewController : MonoBehaviour
 
 	void SetMovableDistance ()
 	{
-		GridLayoutGroup targetGridLayoutGroup = scrollTarget.GetComponent<GridLayoutGroup> ();
+		GridLayoutGroup targetGridLayoutGroup = scrollTargetRect.gameObject.GetComponent<GridLayoutGroup> ();
 		float paddingLeft = targetGridLayoutGroup.padding.left;
 		float paddingRight = targetGridLayoutGroup.padding.right;
 		float cellSizeX = targetGridLayoutGroup.cellSize.x;
 		float spacingX = targetGridLayoutGroup.spacing.x;
-		int numberOfChilds = scrollTarget.childCount;
+		int numberOfChilds = scrollTargetRect.gameObject.transform.childCount;
 
 		float scrollTargetWidth = cellSizeX * numberOfChilds + spacingX * (numberOfChilds - 1) + paddingLeft + paddingRight;
 		movableDistance = scrollTargetWidth - scrollViewWidth;
@@ -196,7 +238,8 @@ public class ScrollViewController : MonoBehaviour
 		}
 	}
 
-	public void PointerDown(){
-		Debug.Log("Touched Down");
+	public void PointerDown ()
+	{
+		Debug.Log ("Touched Down");
 	}
 }
