@@ -14,6 +14,7 @@ public class PlaySceneController : MonoBehaviour {
 	int score = 0;
 	// Use this for initialization
 	void Start () {
+		Time.timeScale = 1;
 		SceneManager.LoadScene("Stage", LoadSceneMode.Additive); 
 	}
 	
@@ -29,8 +30,8 @@ public class PlaySceneController : MonoBehaviour {
 			joy_stick.SetActive (false);
 			Time.timeScale = 0;
 		} else {
-			pause = true;
 			Time.timeScale = 1;
+			pause = true;
 			pause_image.SetActive (false);
 			joy_stick.SetActive (true);
 		}
@@ -48,9 +49,11 @@ public class PlaySceneController : MonoBehaviour {
 		SceneManager.LoadScene ("Play");
 	}
 	public void Home(){
+		Time.timeScale = 1;
 		SceneManager.LoadScene ("Title");
 	}
 	public void Animation(){
+		Time.timeScale = 1;
 		SceneManager.LoadScene ("AniamtionSelect");
 	}
 	public void CheckScore(int id,int count){

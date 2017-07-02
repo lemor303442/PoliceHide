@@ -11,9 +11,10 @@ public class TitleSceneController : MonoBehaviour {
 
 
 	void Start (){
+		SceneManager.LoadScene("Stage", LoadSceneMode.Additive); 
 		
 		if (Application.systemLanguage == SystemLanguage.Japanese) {
-			gametitle.text = "警察早くやめてぇー";
+			gametitle.text = "POLICE\nSimulator";
 		} else {
 			gametitle.text = "I am Police";
 		}

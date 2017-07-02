@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UniRx;
 using UnityEngine.UI;
+using UnityStandardAssets.CinematicEffects;
 
 public class AnimationController : MonoBehaviour {
 	private Animator _animator;
@@ -21,6 +22,7 @@ public class AnimationController : MonoBehaviour {
 	public GameObject slider_canvas;
 	public Slider slider;
 	public GameObject main_camera;
+	bool isplaying = true;
 
 	void Start(){
 		_animator = GetComponent <Animator> ();
@@ -77,9 +79,13 @@ public class AnimationController : MonoBehaviour {
 	void OnTriggerStay(Collider other){
 		if (other.gameObject.tag == "Eyesite") {
 			if (animInfo.nameHash != Animator.StringToHash ("Base Layer.Grounded")) {
+				isplaying = false;
+				slider.gameObject.SetActive(false);
+				main_camera.GetComponent<TonemappingColorGrading> ().enabled = true;
+				main_camera.GetComponent<CameraController> ().checker = false;
+				Time.timeScale = 0.5f;
 				_animator.SetTrigger ("pray");
-				slider.enabled = false;
-				//playSceneController.GameOver ();
+				playSceneController.GameOver ();
 			}
 		}
 	}
@@ -97,7 +103,7 @@ public class AnimationController : MonoBehaviour {
 			_animator.SetBool ("JoyJump", true);
 			break;
 		case 3:
-			_animator.SetBool ("HeadSpin", true);
+			_animator.SetBool ("can_can", true);
 			break;
 		case 4:
 			_animator.SetBool ("FallFlat", true);
@@ -106,19 +112,21 @@ public class AnimationController : MonoBehaviour {
 	}
 
 	public void ButtonClickUp(int id){
-		switch (NowAnimation) {
-		case 1:
-			_animator.SetBool ("Dance", false);
-			break;
-		case 2:
-			_animator.SetBool ("JoyJump", false);
-			break;
-		case 3:
-			_animator.SetBool ("HeadSpin", false);
-			break;
-		case 4:
-			_animator.SetBool ("FallFlat", false);
-			break;
+		if (isplaying) {
+			switch (NowAnimation) {
+			case 1:
+				_animator.SetBool ("Dance", false);
+				break;
+			case 2:
+				_animator.SetBool ("JoyJump", false);
+				break;
+			case 3:
+				_animator.SetBool ("can_can", false);
+				break;
+			case 4:
+				_animator.SetBool ("FallFlat", false);
+				break;
+			}
 		}
 		playSceneController.CheckScore(NowAnimation,count);
 		count = 0;
