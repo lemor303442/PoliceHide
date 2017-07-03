@@ -94,6 +94,7 @@ public class AnimationController : MonoBehaviour {
 		count = 0;
 		isButtonPressed = !isButtonPressed;
 		NowAnimation = id;
+		slider_canvas.SetActive(true);
 		//どのボタンが押されたかを判断
 		switch (NowAnimation) {
 		case 1:
@@ -128,6 +129,7 @@ public class AnimationController : MonoBehaviour {
 				break;
 			}
 		}
+		slider_canvas.SetActive(false);
 		playSceneController.CheckScore(NowAnimation,count);
 		count = 0;
 		NowAnimation = 0;

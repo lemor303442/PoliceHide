@@ -12,10 +12,12 @@ public class PlaySceneController : MonoBehaviour {
 	public Text score_text;
 	public Text finish_score_text;
 	int score = 0;
+	int point = 0;
 	// Use this for initialization
 	void Start () {
 		Time.timeScale = 1;
-		SceneManager.LoadScene("Stage", LoadSceneMode.Additive); 
+		SceneManager.LoadScene("Stage", LoadSceneMode.Additive);
+		point = PlayerPrefs.GetInt("point", 0);
 	}
 	
 	// Update is called once per frame
@@ -39,13 +41,14 @@ public class PlaySceneController : MonoBehaviour {
 
 	public void GameOver(){
 		gameover_image.SetActive (true);
-		finish_score_text.text = "Score : " + DataManager.instance.Score;
+		finish_score_text.text = "Score : " + score;
+		PlayerPrefs.SetInt("point", point + score);
 		if (DataManager.instance.Score < score) {
 			finish_score_text.text = "Score : " + score;
 			DataManager.instance.Score = score;
 		}
 	}
-	public void Retry(){
+	public void Retry(){	
 		SceneManager.LoadScene ("Play");
 	}
 	public void Home(){
