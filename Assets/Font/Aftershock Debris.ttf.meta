@@ -1,0 +1,21 @@
+fileFormatVersion: 2
+guid: ff8562c6c862d417781a97101560679c
+timeCreated: 1498466030
+licenseType: Free
+TrueTypeFontImporter:
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontName: Aftershock Debris
+  fontNames:
+  - Aftershock Debris
+  fallbackFontReferences: []
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
