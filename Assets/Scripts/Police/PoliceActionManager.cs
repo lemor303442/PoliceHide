@@ -2,15 +2,36 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PoliceActionManager : MonoBehaviour {
+namespace Police
+{
+	public class PoliceActionManager : MonoBehaviour
+	{
 
-	// Use this for initialization
-	void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
+		private List<PoliceAction> m_ActionList;
+
+		public void Update()
+		{
+			PoliceAction act;
+			switch (actNo)
+			{
+			case 0:
+				act = new WalkTo();
+				break;
+			case 1:
+				//act = new OpenDoor();
+				break;
+			default:
+				act = null;
+				break;
+			}
+			act.SetGameObject(this.gameObject);
+			m_ActionList.Add(act);
+
+			m_ActionList[0].Update();
+			if (m_ActionList[0].IsEnd())
+			{
+				m_ActionList.RemoveAt(0);
+			}
+		}
 	}
 }

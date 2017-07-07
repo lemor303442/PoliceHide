@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BaseAction : MonoBehaviour {
+public class LookAt : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
