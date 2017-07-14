@@ -8,6 +8,11 @@ namespace Police
 	{
 
 		private List<PoliceAction> m_ActionList;
+		private int actNo;
+
+		void Start(){
+
+		}
 
 		public void Update()
 		{
@@ -16,9 +21,10 @@ namespace Police
 			{
 			case 0:
 				act = new WalkTo();
+
 				break;
 			case 1:
-				//act = new OpenDoor();
+				act = null;
 				break;
 			default:
 				act = null;
