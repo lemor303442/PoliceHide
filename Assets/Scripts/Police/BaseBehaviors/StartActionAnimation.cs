@@ -2,15 +2,24 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class StartActionAnimation : MonoBehaviour {
+namespace Police
+{
+	public class StartActionAnimation : PoliceAction {
+		private Animator m_animator;
 
-	// Use this for initialization
-	void Start () {
+		public void Init(string anim)
+		{
+			m_animator = m_gameObject.GetComponent<Animator>();
+			m_animator.Play(anim, 0);
+		}
+
+		// Update is called once per frame
+		public override void Update(){
 		
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
+		}
+
+		public override bool IsEnd(){
+			return m_animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1.0f;
+		}
 	}
 }

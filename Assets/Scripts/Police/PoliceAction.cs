@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Police
 {
-	public abstract class PoliceAction : MonoBehaviour
+	public abstract class PoliceAction
 	{
 		protected int m_status;
 		protected PoliceActionManager m_manager;
@@ -29,13 +29,13 @@ namespace Police
 				targetObj.transform.position = targetPos;
 			}
 			Quaternion targetRotation = targetObj.transform.rotation;
-			Quaternion firstRotation = this.transform.rotation;
+			Quaternion firstRotation = m_gameObject.transform.rotation;
 			float rotateSpeed = 50;
 			//実際に回転させる
-			Quaternion currentRotation = Quaternion.RotateTowards (this.transform.rotation, targetRotation, rotateSpeed * Time.deltaTime);
-			this.transform.rotation = currentRotation;
-			if ((this.transform.eulerAngles.y - targetRotation.eulerAngles.y) % 360 == 0) {
-				Destroy (targetObj);
+			Quaternion currentRotation = Quaternion.RotateTowards (m_gameObject.transform.rotation, targetRotation, rotateSpeed * Time.deltaTime);
+			m_gameObject.transform.rotation = currentRotation;
+			if ((m_gameObject.transform.eulerAngles.y - targetRotation.eulerAngles.y) % 360 == 0) {
+				GameObject.Destroy (targetObj);
 				targetObj = null;
 				return true;
 			}
@@ -44,8 +44,8 @@ namespace Police
 
 		public bool WalkTo (Vector3 targetPos, float speed)
 		{
-			this.transform.position += transform.forward * speed * Time.deltaTime;
-			if (Vector3.Distance (this.transform.position, targetPos) < 0.1f)
+			m_gameObject.transform.position += m_gameObject.transform.forward * speed * Time.deltaTime;
+			if (Vector3.Distance (m_gameObject.transform.position, targetPos) < 0.1f)
 				return true;
 			return false;
 		}
