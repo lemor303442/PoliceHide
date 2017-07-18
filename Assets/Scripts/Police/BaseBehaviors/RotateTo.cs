@@ -26,6 +26,13 @@ namespace Police
 			m_timer = 0;
 			m_posMode = true;
 		}
+		public void Init(string destObj, float time)
+		{
+			m_destPos = GameObject.Find(destObj).transform.position;
+			m_time = time;
+			m_timer = 0;
+			m_posMode = true;
+		}
 		public override void Update(){
 			if (m_posMode)
 			{

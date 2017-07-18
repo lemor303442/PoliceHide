@@ -83,8 +83,6 @@ namespace Police
 		{
 			var act = new StartActionAnimation();
 			act.SetGameObject(this.gameObject);
-			Debug.Log(anim);
-
 			act.Init(anim, waitAnimEnd);
 			m_ActionList.Add(act);
 		}
