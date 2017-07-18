@@ -33,10 +33,10 @@ namespace Police
 					PlayAnimation(cmds[1], System.Convert.ToBoolean(cmds[2]));
 					break;
 				case "WalkTo":
-					WalkTo(new Vector3(float.Parse(cmds[1]), float.Parse(cmds[2]), float.Parse(cmds[3])), int.Parse(cmds[4]));
+					WalkTo(cmds[1],int.Parse(cmds[2]));
 					break;
 				case "RotateTo":
-					RotateTo(new Vector3(float.Parse(cmds[1]), float.Parse(cmds[2]), float.Parse(cmds[3])), int.Parse(cmds[4]));
+					RotateTo(cmds[1], int.Parse(cmds[2]));
 					break;
 				case "WaitAction":
 					WaitAction();
@@ -103,11 +103,27 @@ namespace Police
 			m_ActionList.Add(act);
 		}
 
+		private void RotateTo(string destObj, float speed)
+		{
+			var act = new RotateTo();
+			act.SetGameObject(this.gameObject);
+			act.Init(destObj, speed);
+			m_ActionList.Add(act);
+		}
+
 		private void WalkTo(Vector3 destPos, float speed)
 		{
 			var act = new WalkTo();
 			act.SetGameObject(this.gameObject);
 			act.Init(destPos, speed);
+			m_ActionList.Add(act);
+		}
+
+		private void WalkTo(string destObj, float speed)
+		{
+			var act = new WalkTo();
+			act.SetGameObject(this.gameObject);
+			act.Init(destObj, speed);
 			m_ActionList.Add(act);
 		}
 
