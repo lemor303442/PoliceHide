@@ -18,6 +18,7 @@ WaitForSeconds,5,
 WaitAction,,
 PlayAnimation,stand_up,TRUE
 WaitAction,,
+PlayAnimation,walk,FALSE
 RotateTo,dest_sheetEnterPos,3
 WalkTo,dest_sheetEnterPos,1
 WaitAction,,
@@ -29,6 +30,7 @@ RotateTo,dest_refrigeratorDir,1
 WaitAction,,
 PlayAnimation,OpenCooler,TRUE
 WaitAction,,
+PlayAnimation,walk,FALSE
 RotateTo,dest_sheetEnterPos,3
 WalkTo,dest_sheetEnterPos,1
 WaitAction,,
