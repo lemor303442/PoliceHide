@@ -9,7 +9,6 @@ namespace Police
 		protected int m_status;
 		protected PoliceActionManager m_manager;
 		protected GameObject m_gameObject;
-		protected PlayerAnimation m_anim;
 
 		public void SetGameObject (GameObject obj)
 		{
