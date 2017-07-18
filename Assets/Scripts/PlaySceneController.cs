@@ -16,7 +16,7 @@ public class PlaySceneController : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		Time.timeScale = 1;
-		SceneManager.LoadScene("Stage", LoadSceneMode.Additive);
+		//SceneManager.LoadScene("Stage", LoadSceneMode.Additive);
 		point = PlayerPrefs.GetInt("point", 0);
 	}
 	

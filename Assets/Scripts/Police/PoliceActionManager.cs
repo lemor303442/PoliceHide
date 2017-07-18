@@ -18,7 +18,7 @@ namespace Police
 			//WalkTo,-3.71f, 0, 4.417374f, 5;
 			//WaitAction
 			//ThinkNextAction
-			string cmd = "PlayAnimation,walk\nWaitAction";
+			string cmd = "PlayAnimation,walk,false\nWaitAction";
 
 			foreach(var cmdLine in cmd.Split('\n'))
 			{
@@ -26,12 +26,12 @@ namespace Police
 				switch (cmds[0])
 				{
 				case "PlayAnimation":
-					PlayAnimation(cmds[1]);
+					PlayAnimation(cmds[1], System.Convert.ToBoolean(cmds[2]));
 					break;
 
 				case "GoToDesk":
 					RotateTo(new Vector3(-3.71f, 0, 4.417374f), 3);
-					WalkTo(new Vector3(-3.71f, 0, 4.417374f), 5);
+					WalkTo(new Vector3(-3.71f, 0, 4.417374f), 1);
 					WaitAction();
 					break;
 				}
@@ -39,10 +39,10 @@ namespace Police
 
 			//PlayAnimation("walk");
 			RotateTo(new Vector3(-3.71f, 0, 4.417374f), 3);
-			WalkTo(new Vector3(-3.71f, 0, 4.417374f), 5);
+			WalkTo(new Vector3(-3.71f, 0, 4.417374f), 1);
 			WaitAction();
 			RotateTo(new Vector3(4.75f, 0, 4.417374f), 3);
-			WalkTo(new Vector3(4.75f, 0, 4.417374f), 5);
+			WalkTo(new Vector3(4.75f, 0, 4.417374f), 1);
 			WaitAction();
 		}
 
@@ -72,11 +72,11 @@ namespace Police
 			m_ActionList.Add(act);
 		}
 
-		private void PlayAnimation(string anim)
+		private void PlayAnimation(string anim, bool waitAnimEnd)
 		{
 			var act = new StartActionAnimation();
 			act.SetGameObject(this.gameObject);
-			act.Init(anim);
+			act.Init(anim, waitAnimEnd);
 			m_ActionList.Add(act);
 		}
 
@@ -119,7 +119,9 @@ namespace Police
 					break;
 				}
 				act.Update();
-				isAllEnd = isAllEnd && m_ActionList[0].IsEnd();
+				if(!act.IsEnd()){
+					isAllEnd = false;
+				}
 			}
 			if (isAllEnd)
 			{
