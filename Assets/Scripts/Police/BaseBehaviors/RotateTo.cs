@@ -33,14 +33,15 @@ namespace Police
 			m_timer = 0;
 			m_posMode = true;
 		}
-		public override void Update(){
+		public override void Start(){
 			if (m_posMode)
 			{
 				var dirPos = m_destPos - m_gameObject.transform.position;
 				var angle = Mathf.Atan2(dirPos.x, dirPos.z);
 				m_destRot = Quaternion.Euler(0, (angle * 180 / Mathf.PI) + 0, 0);
-				m_posMode = false;
 			}
+		}
+		public override void Update(){
 			m_timer += Time.deltaTime;
 			m_timer = (m_timer > m_time)? m_time : m_timer;
 			var dir = Quaternion.Lerp(m_gameObject.transform.rotation, m_destRot, m_timer / m_time);

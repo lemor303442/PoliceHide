@@ -6,160 +6,202 @@ namespace Police
 {
 	public class PoliceActionManager : MonoBehaviour
 	{
-
-		private List<PoliceAction> m_ActionList;
+		private List<List<PoliceAction>> m_ActionLists;
+		string m_NowAction;
 		[SerializeField]
 		TextAsset commandCSV;
 
 		void Start()
 		{
-			m_ActionList = new List<PoliceAction>();
+			m_ActionLists = new List<List<PoliceAction>>();
+		}
 
-			//PlayAnimation,walk
-			//RotateTo,-3.71, 0, 4.417374, 3
-			//WalkTo,-3.71, 0, 4.417374, 5;
-			//WaitAction
-			//ThinkNextAction
+		public string GetNowAction()
+		{
+			return m_NowAction;
+		}
 
+		private void ThinkNextAction()
+		{
 			string cmd = commandCSV.ToString();
-			//string cmd = "PlayAnimation,walk,false\nRotateTo,-3.71, 0, 4.417374, 3\nWalkTo,-3.71, 0, 4.417374, 1\nWaitAction\nRotateTo,4.75, 0, 4.417374, 3\nWalkTo,4.75, 0, 4.417374, 1\nWaitAction";
 
-			foreach(var cmdLine in cmd.Split('\n'))
+			var actionList = new List<PoliceAction>();
+			var lines = cmd.Split('\n');
+			foreach(var cmdLine in lines)
 			{
+				if (string.IsNullOrEmpty(cmdLine) || cmdLine.StartsWith("//"))
+				{
+					continue;
+				}
+				if (cmdLine[0] == ':')
+				{
+					m_NowAction = lines[0];
+					continue;
+				}
 				string[] cmds = cmdLine.Split(',');
 				switch (cmds[0])
 				{
 				case "PlayAnimation":
-					PlayAnimation(cmds[1], System.Convert.ToBoolean(cmds[2]));
+					PlayAnimation(actionList, cmds[1], System.Convert.ToBoolean(cmds[2]));
 					break;
 				case "WalkTo":
-					WalkTo(cmds[1],int.Parse(cmds[2]));
+					WalkTo(actionList, cmds[1],int.Parse(cmds[2]));
 					break;
 				case "RotateTo":
-					RotateTo(cmds[1], int.Parse(cmds[2]));
+					RotateTo(actionList, cmds[1], int.Parse(cmds[2]));
 					break;
 				case "WaitAction":
-					WaitAction();
+					WaitAction(actionList);
 					break;
 				case "WaitForSeconds":
-					WaitForSeconds(float.Parse(cmds[1]));
-					break;
-				case "GoToDesk":
-					RotateTo(new Vector3(-3.71f, 0, 4.417374f), 3);
-					WalkTo(new Vector3(-3.71f, 0, 4.417374f), 1);
-					WaitAction();
+					WaitForSeconds(actionList, float.Parse(cmds[1]));
 					break;
 				}
 			}
+			NextAction(actionList);
 		}
 
-		private void NextAction(int actNo)
+		private void NextAction(List<PoliceAction> actionList)
 		{
-			PoliceAction act;
-			switch (actNo)
+			if (m_ActionLists.Count == 0)
 			{
-			case 0:
-				act = new WalkTo();
-				break;
-			case 1:
-				act = null;
-				break;
-			default:
-				act = null;
-				break;
+				m_ActionLists.Add(actionList);
 			}
-			act.SetGameObject(this.gameObject);
-			m_ActionList.Add(act);
+			else
+			{
+				m_ActionLists[0] = actionList;
+			}
 		}
 
-		private void WaitAction()
+		private void InterruptAction(List<PoliceAction> actionList)
+		{
+			if (m_ActionLists.Count != 0)
+			{
+				var activeAction = m_ActionLists[m_ActionLists.Count - 1];
+				foreach (var act in activeAction)
+				{
+					if (act is WaitAction)
+					{
+						break;
+					}
+					act.Suspend();
+				}
+			}
+			m_ActionLists.Add(actionList);
+		}
+
+		private void WaitAction(List<PoliceAction> list)
 		{
 			var act = new WaitAction();
 			act.SetGameObject(this.gameObject);
-			m_ActionList.Add(act);
+			list.Add(act);
 		}
 
-		private void PlayAnimation(string anim, bool waitAnimEnd)
+		private void PlayAnimation(List<PoliceAction> list, string anim, bool waitAnimEnd)
 		{
 			var act = new StartActionAnimation();
 			act.SetGameObject(this.gameObject);
 			act.Init(anim, waitAnimEnd);
-			m_ActionList.Add(act);
+			list.Add(act);
 		}
 
-		private void RotateTo(Quaternion angle, float speed)
+		private void RotateTo(List<PoliceAction> list, Quaternion angle, float speed)
 		{
 			var act = new RotateTo();
 			act.SetGameObject(this.gameObject);
 			act.Init(angle, speed);
-			m_ActionList.Add(act);
+			list.Add(act);
 		}
 
-		private void RotateTo(Vector3 destPos, float speed)
+		private void RotateTo(List<PoliceAction> list, Vector3 destPos, float speed)
 		{
 			var act = new RotateTo();
 			act.SetGameObject(this.gameObject);
 			act.Init(destPos, speed);
-			m_ActionList.Add(act);
+			list.Add(act);
 		}
 
-		private void RotateTo(string destObj, float speed)
+		private void RotateTo(List<PoliceAction> list, string destObj, float speed)
 		{
 			var act = new RotateTo();
 			act.SetGameObject(this.gameObject);
 			act.Init(destObj, speed);
-			m_ActionList.Add(act);
+			list.Add(act);
 		}
 
-		private void WalkTo(Vector3 destPos, float speed)
+		private void WalkTo(List<PoliceAction> list, Vector3 destPos, float speed)
 		{
 			var act = new WalkTo();
 			act.SetGameObject(this.gameObject);
 			act.Init(destPos, speed);
-			m_ActionList.Add(act);
+			list.Add(act);
 		}
 
-		private void WalkTo(string destObj, float speed)
+		private void WalkTo(List<PoliceAction> list, string destObj, float speed)
 		{
 			var act = new WalkTo();
 			act.SetGameObject(this.gameObject);
 			act.Init(destObj, speed);
-			m_ActionList.Add(act);
+			list.Add(act);
 		}
 
-		private void WaitForSeconds(float waitTime){
+		private void WaitForSeconds(List<PoliceAction> list, float waitTime){
 			var act = new WaitForSeconds();
 			act.SetGameObject(this.gameObject);
 			act.Init(waitTime);
-			m_ActionList.Add(act);
+			list.Add(act);
 		}
 
 		public void Update()
 		{
-			if (m_ActionList.Count == 0)
+			if (m_ActionLists.Count != 0)
 			{
-				return;
-			}
-
-			var isAllEnd = true;
-			foreach (var act in m_ActionList)
-			{
-				if (act is WaitAction)
+				var activeAction = m_ActionLists[m_ActionLists.Count - 1];
+				var isAllEnd = true;
+				foreach (var act in activeAction)
 				{
-					break;
+					if (act is WaitAction)
+					{
+						break;
+					}
+					if (!act.IsStart())
+					{
+						act.Start();
+						act.SetStart();
+					}
+					act.Update();
+					if(!act.IsEnd()){
+						isAllEnd = false;
+					}
 				}
-				act.Update();
-				if(!act.IsEnd()){
-					isAllEnd = false;
+				if (isAllEnd)
+				{
+					while (activeAction.Count > 0 && !(activeAction[0] is WaitAction))
+					{
+						activeAction.RemoveAt(0);
+					}
+					activeAction.RemoveAt(0);
+					if (activeAction.Count == 0)
+					{
+						if (m_ActionLists.Count != 0)
+						{
+							m_ActionLists.Remove(activeAction);
+							activeAction = m_ActionLists[m_ActionLists.Count - 1];
+							foreach (var act in activeAction)
+							{
+								if (act is WaitAction)
+								{
+									break;
+								}
+								act.Resume();
+							}
+						}
+					}
 				}
 			}
-			if (isAllEnd)
+			if (m_ActionLists.Count == 0)
 			{
-				if (!(m_ActionList[0] is WaitAction))
-				{
-					m_ActionList.RemoveAt(0);
-				}
-				m_ActionList.RemoveAt(0);
+				ThinkNextAction();
 			}
 		}
 	}

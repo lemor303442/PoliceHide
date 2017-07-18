@@ -1,3 +1,5 @@
+// ƒfƒXƒN‚ÉŒü‚©‚¤
+:GotoDesk
 PlayAnimation,walk,FALSE
 RotateTo,dest_OfficeEntrance,1
 WalkTo,dest_OfficeEntrance,1
