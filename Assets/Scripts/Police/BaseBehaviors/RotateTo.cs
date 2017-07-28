@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Police
+namespace Polices
 {
 	public class RotateTo : PoliceAction
 	{
@@ -26,9 +26,16 @@ namespace Police
 			m_timer = 0;
 			m_posMode = true;
 		}
-		public void Init(string destObj, float time)
+		public void Init(string destObj, float time, int policeId)
 		{
+			if(destObj == "dest_sheet" || destObj == "dest_sheetDir" || destObj == "dest_sheetEnterPos"){
+				destObj = destObj + policeId.ToString();
+			}
 			m_destPos = GameObject.Find(destObj).transform.position;
+			if(m_destPos == null){
+				Debug.Log(destObj + "が見つかりませんでした。");
+				return;
+			}
 			m_time = time;
 			m_timer = 0;
 			m_posMode = true;

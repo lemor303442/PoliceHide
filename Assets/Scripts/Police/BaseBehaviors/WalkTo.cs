@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Police
+namespace Polices
 {
 	public class WalkTo : PoliceAction
 	{
@@ -16,9 +16,16 @@ namespace Police
 			m_speed = speed;
 			m_isEnd = false;
 		}
-		public void Init(string destObj, float speed)
+		public void Init(string destObj, float speed, int policeId)
 		{
+			if(destObj == "dest_sheet" || destObj == "dest_sheetDir" || destObj == "dest_sheetEnterPos"){
+				destObj = destObj + policeId.ToString();
+			}
 			m_targetPos = GameObject.Find(destObj).transform.position;
+			if(m_targetPos == null){
+				Debug.Log(destObj + "が見つかりませんでした。");
+				return;
+			}
 			m_speed = speed;
 			m_isEnd = false;
 		}

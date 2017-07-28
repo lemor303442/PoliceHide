@@ -16,20 +16,20 @@ namespace Polices
 		public PoliceStatus prePoliceStatus = PoliceStatus.NONE;
 		public PoliceStatus policeStatusTransfer = PoliceStatus.NONE;
 
-		void Start ()
-		{
-			StartCoroutine(CheckPoliceStatus());
-		}
-
-		IEnumerator CheckPoliceStatus ()
-		{
-			for (;;) {
-				if(policeStatus != policeStatusTransfer){
-					prePoliceStatus = policeStatusTransfer;
-					policeStatusTransfer = policeStatus;
-				}
-				yield return new WaitForSeconds (0.1f);
-			}
-		}
+//		void Start ()
+//		{
+//			StartCoroutine(CheckPoliceStatus());
+//		}
+//
+//		IEnumerator CheckPoliceStatus ()
+//		{
+//			for (;;) {
+//				if(policeStatus != policeStatusTransfer){
+//					prePoliceStatus = policeStatusTransfer;
+//					policeStatusTransfer = policeStatus;
+//				}
+//				yield return new WaitForSeconds (0.1f);
+//			}
+//		}
 	}
 }

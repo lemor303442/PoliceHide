@@ -2,20 +2,20 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Police
+namespace Polices
 {
 	public class StartActionAnimation : PoliceAction
 	{
 		private Animator m_animator;
 		private string m_anim;
-		private bool m_waitAnimEnd;
+		private bool m_repeat;
 		private bool m_startAnim;
 
-		public void Init (string anim, bool waitAnimEnd)
+		public void Init (string anim, bool repeat)
 		{
 			m_animator = m_gameObject.GetComponent<Animator> ();
 			m_anim = anim;
-			m_waitAnimEnd = waitAnimEnd;
+			m_repeat = repeat;
 			m_startAnim = true;
 		}
 
@@ -31,7 +31,7 @@ namespace Police
 
 		public override bool IsEnd ()
 		{
-			if (!m_waitAnimEnd) {
+			if (m_repeat) {
 				return true;
 			}
 			return m_animator.GetCurrentAnimatorStateInfo (0).normalizedTime >= 1.0f;

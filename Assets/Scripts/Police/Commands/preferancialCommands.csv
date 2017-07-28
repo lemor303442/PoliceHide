@@ -1,0 +1,12 @@
+//うんちを掃除する,,
+:,CleanPoop,
+RotateTo,dest_poop,0.2
+PlayAnimation,LookBack,false
+WaitAction,,
+PlayAnimation,walk,true
+RotateTo,dest_poop,1
+WalkTo,dest_poop,1
+WaitAction,,
+PlayAnimation,pick_up,false
+WaitAction,,
+::,,

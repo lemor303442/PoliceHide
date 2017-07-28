@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Police
+namespace Polices
 {
 	public class WaitAction : PoliceAction
 	{
