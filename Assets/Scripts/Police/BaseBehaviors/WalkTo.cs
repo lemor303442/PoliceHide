@@ -29,6 +29,7 @@ namespace Polices
 			m_speed = speed;
 			m_isEnd = false;
 		}
+
 		public override void Update(){
 			var dir = m_targetPos - m_gameObject.transform.position;
 			var step = m_speed * Time.deltaTime;

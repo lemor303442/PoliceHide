@@ -223,6 +223,7 @@ namespace Polices
 					}
 				}
 				if (isAllEnd) {
+					Debug.Log("one action end");
 					while (activeAction.Count > 0 && !(activeAction [0] is WaitAction)) {
 						activeAction.RemoveAt (0);
 					}

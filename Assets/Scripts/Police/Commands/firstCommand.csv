@@ -4,12 +4,15 @@ PlayAnimation,walk,true
 RotateTo,dest_OfficeEntranceOutside,1
 WalkTo,dest_OfficeEntranceOutside,1
 WaitAction,,
+PlayAnimation,walk,true
 RotateTo,dest_OfficeEntranceInside,1
 WalkTo,dest_OfficeEntranceInside,1
 WaitAction,,
+PlayAnimation,walk,true
 RotateTo,dest_sheetEnterPos,1
 WalkTo,dest_sheetEnterPos,1
 WaitAction,,
+PlayAnimation,walk,true
 RotateTo,dest_sheet,1
 WalkTo,dest_sheet,1
 WaitAction,,
@@ -19,5 +22,5 @@ WaitAction,,
 PlayAnimation,sit_down,false
 WaitAction,,
 PlayAnimation,work,true
-WaitAction,, 
+WaitAction,,
 ::,,
