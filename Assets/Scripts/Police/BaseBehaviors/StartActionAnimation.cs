@@ -21,9 +21,7 @@ namespace Polices
 			m_repeat = repeat;
 			m_startAnim = true;
 		}
-
-
-
+			
 		public override void Resume(){
 			float duration = 0.3f / m_animator.GetCurrentAnimatorStateInfo (0).length;
 			//				duration = 0;

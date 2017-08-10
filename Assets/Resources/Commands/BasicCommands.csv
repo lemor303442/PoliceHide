@@ -11,6 +11,7 @@ PlayAnimation,walk,true
 RotateTo,dest_sheetEnterPos,1
 WalkTo,dest_sheetEnterPos,1
 WaitAction,,
+PlayAnimation,walk,true
 RotateTo,dest_refrigerator,1
 WalkTo,dest_refrigerator,1
 WaitAction,,
@@ -23,6 +24,7 @@ PlayAnimation,walk,true
 RotateTo,dest_sheetEnterPos,1
 WalkTo,dest_sheetEnterPos,1
 WaitAction,,
+PlayAnimation,walk,true
 RotateTo,dest_sheet,1
 WalkTo,dest_sheet,1
 WaitAction,,
@@ -42,6 +44,7 @@ PlayAnimation,walk,true
 RotateTo,dest_sheetEnterPos,1
 WalkTo,dest_sheetEnterPos,1
 WaitAction,,
+PlayAnimation,walk,true
 RotateTo,dest_poster,1
 WalkTo,dest_poster,1
 WaitAction,,
@@ -54,6 +57,7 @@ PlayAnimation,walk,true
 RotateTo,dest_sheetEnterPos,1
 WalkTo,dest_sheetEnterPos,1
 WaitAction,,
+PlayAnimation,walk,true
 RotateTo,dest_sheet,1
 WalkTo,dest_sheet,1
 WaitAction,,
@@ -73,6 +77,7 @@ PlayAnimation,walk,true
 RotateTo,dest_sheetEnterPos,1
 WalkTo,dest_sheetEnterPos,1
 WaitAction,,
+PlayAnimation,walk,true
 RotateTo,dest_locker1,1
 WalkTo,dest_locker1,1
 WaitAction,,
@@ -85,6 +90,7 @@ PlayAnimation,walk,true
 RotateTo,dest_sheetEnterPos,1
 WalkTo,dest_sheetEnterPos,1
 WaitAction,,
+PlayAnimation,walk,true
 RotateTo,dest_sheet,1
 WalkTo,dest_sheet,1
 WaitAction,,
@@ -104,6 +110,7 @@ PlayAnimation,walk,true
 RotateTo,dest_sheetEnterPos,1
 WalkTo,dest_sheetEnterPos,1
 WaitAction,,
+PlayAnimation,walk,true
 RotateTo,dest_kichen_dishes,1
 WalkTo,dest_kichen_dishes,1
 WaitAction,,
@@ -116,6 +123,7 @@ PlayAnimation,walk,true
 RotateTo,dest_sheetEnterPos,1
 WalkTo,dest_sheetEnterPos,1
 WaitAction,,
+PlayAnimation,walk,true
 RotateTo,dest_sheet,1
 WalkTo,dest_sheet,1
 WaitAction,,
@@ -135,6 +143,7 @@ PlayAnimation,walk,true
 RotateTo,dest_sheetEnterPos,1
 WalkTo,dest_sheetEnterPos,1
 WaitAction,,
+PlayAnimation,walk,true
 RotateTo,dest_plant1,1
 WalkTo,dest_plant1,1
 WaitAction,,
@@ -147,6 +156,7 @@ PlayAnimation,walk,true
 RotateTo,dest_sheetEnterPos,1
 WalkTo,dest_sheetEnterPos,1
 WaitAction,,
+PlayAnimation,walk,true
 RotateTo,dest_sheet,1
 WalkTo,dest_sheet,1
 WaitAction,,
@@ -166,6 +176,7 @@ PlayAnimation,walk,true
 RotateTo,dest_sheetEnterPos,1
 WalkTo,dest_sheetEnterPos,1
 WaitAction,,
+PlayAnimation,walk,true
 RotateTo,dest_plant2,1
 WalkTo,dest_plant2,1
 WaitAction,,
@@ -178,6 +189,7 @@ PlayAnimation,walk,true
 RotateTo,dest_sheetEnterPos,1
 WalkTo,dest_sheetEnterPos,1
 WaitAction,,
+PlayAnimation,walk,true
 RotateTo,dest_sheet,1
 WalkTo,dest_sheet,1
 WaitAction,,
@@ -197,6 +209,7 @@ PlayAnimation,walk,true
 RotateTo,dest_sheetEnterPos,1
 WalkTo,dest_sheetEnterPos,1
 WaitAction,,
+PlayAnimation,walk,true
 RotateTo,dest_plant3,1
 WalkTo,dest_plant3,1
 WaitAction,,
@@ -209,6 +222,7 @@ PlayAnimation,walk,true
 RotateTo,dest_sheetEnterPos,1
 WalkTo,dest_sheetEnterPos,1
 WaitAction,,
+PlayAnimation,walk,true
 RotateTo,dest_sheet,1
 WalkTo,dest_sheet,1
 WaitAction,,
@@ -228,6 +242,7 @@ PlayAnimation,walk,true
 RotateTo,dest_sheetEnterPos,1
 WalkTo,dest_sheetEnterPos,1
 WaitAction,,
+PlayAnimation,walk,true
 RotateTo,dest_plant4,1
 WalkTo,dest_plant4,1
 WaitAction,,
@@ -240,6 +255,7 @@ PlayAnimation,walk,true
 RotateTo,dest_sheetEnterPos,1
 WalkTo,dest_sheetEnterPos,1
 WaitAction,,
+PlayAnimation,walk,true
 RotateTo,dest_sheet,1
 WalkTo,dest_sheet,1
 WaitAction,,
@@ -267,6 +283,7 @@ PlayAnimation,walk,true
 RotateTo,dest_OfficeEntranceOutside,1
 WalkTo,dest_OfficeEntranceOutside,1
 WaitAction,,
+PlayAnimation,walk,true
 RotateTo,dest_OutsideLeft,1
 WalkTo,dest_OutsideLeft,1
 WaitAction,,
@@ -279,6 +296,7 @@ PlayAnimation,walk,true
 RotateTo,dest_sheetEnterPos,1
 WalkTo,dest_sheetEnterPos,1
 WaitAction,,
+PlayAnimation,walk,true
 RotateTo,dest_sheet,1
 WalkTo,dest_sheet,1
 WaitAction,,

@@ -6,34 +6,44 @@ namespace Polices
 {
 	public class PoliceActionManager : MonoBehaviour
 	{
+		//自分の情報
 		PoliceParams policeParams;
-
 		private List<List<PoliceAction>> m_ActionLists;
-
-		public string m_NowAction;
-
-
-		[SerializeField]
-		TextAsset basicCommands;
-		[SerializeField]
-		TextAsset firstCommand;
-		[SerializeField]
-		TextAsset preferencialCommands;
-
+		public string m_nowAction;
+		public string m_beforeAction;
+		private TextAsset basicCommands;
+		private TextAsset otherCommand;
+		private TextAsset preferencialCommands;
 		[SerializeField]
 		List<string> basicBehaviors;
 
+		//その他オブジェクトの情報
+		EventManager eventManager;
+
+
 		void Start ()
 		{
-			policeParams = GetComponent<PoliceParams>();
+			policeParams = GetComponent<PoliceParams> ();
+			eventManager = GameObject.FindObjectOfType<EventManager>();
+			LoadCommands ();
 			m_ActionLists = new List<List<PoliceAction>> ();
 			GetBasicBehaviors ();
-			SetNextAction("InstantiatedToMyDesk", 0);
+
+			policeParams.policeStatus = PoliceStatus.BASIC_BEHAVIOR;
+			m_beforeAction = "Work";
+			SetNextAction ("InstantiatedToMyDesk", 0);
+		}
+
+		void LoadCommands ()
+		{
+			basicCommands = Resources.Load ("Commands/BasicCommands") as TextAsset;
+			otherCommand = Resources.Load ("Commands/OtherCommands") as TextAsset;
+			preferencialCommands = Resources.Load ("Commands/PreferancialCommands") as TextAsset;
 		}
 
 		public string GetNowAction ()
 		{
-			return m_NowAction;
+			return m_nowAction;
 		}
 
 		private void GetBasicBehaviors ()
@@ -50,20 +60,37 @@ namespace Polices
 			}
 		}
 
+		public void RecieveEvents(string name){
+			if(name == "Poop"){
+				SetNextAction ("CleanPoop", 1);
+			}
+		}
+
 		private void ThinkNextAction ()
 		{
 			string actionName;
-			if(m_NowAction == "Work"){
+			if (m_nowAction == "Work") {
 				actionName = basicBehaviors [Random.Range (0, basicBehaviors.Count)];
-			}else{
+				Debug.Log(actionName);
+				foreach (var item in eventManager.policeActionManagers){
+					if(item.m_nowAction  == actionName){
+						actionName = "Work";
+						break;
+					}
+				}
+			} else {
 				actionName = "Work";
 			}
+			policeParams.policeStatus = PoliceStatus.BASIC_BEHAVIOR;
 			SetNextAction (actionName, 0);
 		}
 
+		/// <summary>
+		/// Sets the next action.(Action type -- 1:BasicAction, 2:PreferencialAction)
+		/// </summary>
 		private void SetNextAction (string actionName, int actionType)
 		{
-			string cmd = basicCommands.ToString () + firstCommand.ToString() + preferencialCommands.ToString();
+			string cmd = basicCommands.ToString () + otherCommand.ToString () + preferencialCommands.ToString ();
 
 			var actionList = new List<PoliceAction> ();
 			var lines = cmd.Split ('\n');
@@ -74,10 +101,11 @@ namespace Polices
 				if (!actionFound) {
 					if (string.IsNullOrEmpty (cmdLine) || cmds [0] != ":") {
 						continue;
-					}else{
+					} else {
 						if (cmds [1] == actionName) {
 							Debug.Log (actionName);
-							m_NowAction = actionName;
+							m_beforeAction = m_nowAction;
+							m_nowAction = actionName;
 							actionFound = true;
 							continue;
 						}
@@ -105,10 +133,10 @@ namespace Polices
 					}
 				}
 			}
-			if(actionType == 0){
+			if (actionType == 0) {
 				NextAction (actionList);
-			}else if(actionType == 1){
-				InterruptAction(actionList);
+			} else if (actionType == 1) {
+				InterruptAction (actionList);
 			}
 		}
 
@@ -132,7 +160,63 @@ namespace Polices
 					act.Suspend ();
 				}
 			}
+			policeParams.policeStatus = PoliceStatus.PREFERENCIAL_BEHAVIOR;
 			m_ActionLists.Add (actionList);
+		}
+
+		public void Update ()
+		{
+			if (m_ActionLists.Count != 0) {
+				var activeAction = m_ActionLists [m_ActionLists.Count - 1];
+				var isAllEnd = true;
+				foreach (var act in activeAction) {
+					if (act is WaitAction) {
+						break;
+					}
+					if (!act.IsStart ()) {
+						act.Start ();
+						act.SetStart ();
+					}
+					act.Update ();
+					if (!act.IsEnd ()) {
+						isAllEnd = false;
+					}
+				}
+				if (isAllEnd) {
+					while (activeAction.Count > 0 && !(activeAction [0] is WaitAction)) {
+						activeAction.RemoveAt (0);
+					}
+					activeAction.RemoveAt (0);
+					if (activeAction.Count == 0) {
+						if (m_ActionLists.Count != 0) {
+							m_ActionLists.Remove (activeAction);
+							if (m_ActionLists.Count > 0) {
+								activeAction = m_ActionLists [m_ActionLists.Count - 1];
+							}
+							foreach (var act in activeAction) {
+								if (act is WaitAction) {
+									break;
+								}
+								act.Resume ();
+							}
+							if(activeAction.Count > 0){
+								Debug.Log("ヨバレタ");
+								policeParams.policeStatus = PoliceStatus.BASIC_BEHAVIOR;
+								if(m_beforeAction == "Work"){
+									//自分のシートに帰るアクションを追加する
+									SetNextAction ("BackToMySheet", 0);
+								}
+								string str = m_nowAction;
+								m_nowAction = m_beforeAction;
+								m_beforeAction = str;
+							}
+						}
+					}
+				}
+			}
+			if (m_ActionLists.Count == 0) {
+				ThinkNextAction ();
+			}
 		}
 
 		private void WaitAction (List<PoliceAction> list)
@@ -198,53 +282,6 @@ namespace Polices
 			list.Add (act);
 		}
 
-		public void Update ()
-		{
-			if(Input.GetKeyDown("z")){
-				SetNextAction("CleanPoop", 1);
-			}
 
-
-
-			if (m_ActionLists.Count != 0) {
-				var activeAction = m_ActionLists [m_ActionLists.Count - 1];
-				var isAllEnd = true;
-				foreach (var act in activeAction) {
-					if (act is WaitAction) {
-						break;
-					}
-					if (!act.IsStart ()) {
-						act.Start ();
-						act.SetStart ();
-					}
-					act.Update ();
-					if (!act.IsEnd ()) {
-						isAllEnd = false;
-					}
-				}
-				if (isAllEnd) {
-					Debug.Log("one action end");
-					while (activeAction.Count > 0 && !(activeAction [0] is WaitAction)) {
-						activeAction.RemoveAt (0);
-					}
-					activeAction.RemoveAt (0);
-					if (activeAction.Count == 0) {
-						if (m_ActionLists.Count != 0) {
-							m_ActionLists.Remove (activeAction);
-							activeAction = m_ActionLists [m_ActionLists.Count - 1];
-							foreach (var act in activeAction) {
-								if (act is WaitAction) {
-									break;
-								}
-								act.Resume ();
-							}
-						}
-					}
-				}
-			}
-			if (m_ActionLists.Count == 0) {
-				ThinkNextAction ();
-			}
-		}
 	}
 }
