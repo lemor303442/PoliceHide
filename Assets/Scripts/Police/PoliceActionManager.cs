@@ -11,9 +11,14 @@ namespace Polices
 		private List<List<PoliceAction>> m_ActionLists;
 		public string m_nowAction;
 		public string m_beforeAction;
-		private TextAsset basicCommands;
-		private TextAsset otherCommand;
-		private TextAsset preferencialCommands;
+
+		private string basicCommands;
+		public string BasicCommands{ set { basicCommands = value; } }
+		private string otherCommands;
+		public string OtherCommands{ set { otherCommands = value; } }
+		private string preferencialCommands;
+		public string PreferencialCommands{ set { preferencialCommands = value; } }
+
 		[SerializeField]
 		List<string> basicBehaviors;
 
