@@ -14,7 +14,7 @@ namespace SocialConnector
 		{
 
 			if (GUILayout.Button ("<size=30><b>Take</b></size>", GUILayout.Height (60))) {
-				Application.CaptureScreenshot ("image.png");
+				ScreenCapture.CaptureScreenshot ("image.png");
 			}
 
 			GUILayout.Space (60);

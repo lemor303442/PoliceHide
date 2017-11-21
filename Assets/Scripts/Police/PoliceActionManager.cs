@@ -29,21 +29,14 @@ namespace Polices
 		void Start ()
 		{
 			policeParams = GetComponent<PoliceParams> ();
-			eventManager = GameObject.FindObjectOfType<EventManager>();
-			LoadCommands ();
+			eventManager = GameObject.FindObjectOfType<EventManager> ();
 			m_ActionLists = new List<List<PoliceAction>> ();
 			GetBasicBehaviors ();
 
-			policeParams.policeStatus = PoliceStatus.BASIC_BEHAVIOR;
+			OutputLog("[Start()] => Instantiated");
+			SetPoliceStatus(PoliceStatus.BASIC_BEHAVIOR);
 			m_beforeAction = "Work";
 			SetNextAction ("InstantiatedToMyDesk", 0);
-		}
-
-		void LoadCommands ()
-		{
-			basicCommands = Resources.Load ("Commands/BasicCommands") as TextAsset;
-			otherCommand = Resources.Load ("Commands/OtherCommands") as TextAsset;
-			preferencialCommands = Resources.Load ("Commands/PreferancialCommands") as TextAsset;
 		}
 
 		public string GetNowAction ()
@@ -65,8 +58,9 @@ namespace Polices
 			}
 		}
 
-		public void RecieveEvents(string name){
-			if(name == "Poop"){
+		public void RecieveEvents (string name)
+		{
+			if (name == "Poop") {
 				SetNextAction ("CleanPoop", 1);
 			}
 		}
@@ -76,21 +70,29 @@ namespace Polices
 			string actionName;
 			if (m_nowAction == "Work") {
 				actionName = basicBehaviors [Random.Range (0, basicBehaviors.Count)];
-				Debug.Log(actionName);
-				foreach (var item in eventManager.policeActionManagers){
-					if(item.m_nowAction  == actionName){
-						actionName = "Work";
-						break;
+				//もし現在このアクションをしているPoliceがいた場合、"Work"をする
+				//イベントマネジャーの関数に移行予定
+				foreach (var item in eventManager.policeActionManagers) {
+					if (item.policeParams.policeStatus == PoliceStatus.BASIC_BEHAVIOR) {
+						if (item.m_nowAction == actionName) {
+							actionName = "Work";
+							break;
+						}
+					} else if (item.policeParams.policeStatus == PoliceStatus.PREFERENCIAL_BEHAVIOR) {
+						if (item.m_beforeAction == actionName) {
+							actionName = "Work";
+							break;
+						}
 					}
 				}
 			} else {
 				actionName = "Work";
 			}
-			policeParams.policeStatus = PoliceStatus.BASIC_BEHAVIOR;
-			SetNextAction (actionName, 0);
 
+			SetPoliceStatus(PoliceStatus.BASIC_BEHAVIOR);
 			string log = "[ThinkNextAction()] action decided => " + actionName;
 			OutputLog(log);
+			SetNextAction (actionName, 0);
 		}
 
 		/// <summary>
@@ -168,7 +170,7 @@ namespace Polices
 					act.Suspend ();
 				}
 			}
-			policeParams.policeStatus = PoliceStatus.PREFERENCIAL_BEHAVIOR;
+			SetPoliceStatus(PoliceStatus.PREFERENCIAL_BEHAVIOR);
 			m_ActionLists.Add (actionList);
 		}
 
@@ -207,10 +209,10 @@ namespace Polices
 								}
 								act.Resume ();
 							}
-							if(activeAction.Count > 0){
-								Debug.Log("ヨバレタ");
-								policeParams.policeStatus = PoliceStatus.BASIC_BEHAVIOR;
-								if(m_beforeAction == "Work"){
+							if (activeAction.Count > 0) {
+								Debug.Log ("ヨバレタ");
+								SetPoliceStatus(PoliceStatus.BASIC_BEHAVIOR);
+								if (m_beforeAction == "Work") {
 									//自分のシートに帰るアクションを追加する
 									SetNextAction ("BackToMySheet", 0);
 								}
@@ -238,6 +240,12 @@ namespace Polices
 			logList.Add(newLog);
 			string path = "Logs/PoliceLog" + policeParams.policeID.ToString() + ".csv";
 			csvManager.WriteData(path,logList);
+		}
+
+
+		private void SetPoliceStatus(PoliceStatus _policeStatus){
+			policeParams.policeStatus = _policeStatus;
+			string log = "[SetPoliceStatus()] policeStatus changed => " + _policeStatus.ToString();
 		}
 
 

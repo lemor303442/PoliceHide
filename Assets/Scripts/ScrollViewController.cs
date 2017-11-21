@@ -54,7 +54,7 @@ public class ScrollViewController : MonoBehaviour
 			screenRatio = canvasScaler.referenceResolution.y/Screen.height;
 		}
 
-		scrollTargetRect = this.transform.FindChild ("Content").GetComponent<RectTransform> ();
+		scrollTargetRect = this.transform.Find ("Content").GetComponent<RectTransform> ();
 		scrollViewWidth = this.gameObject.GetComponent<RectTransform> ().rect.width;
 		SetMovableDistance ();
 

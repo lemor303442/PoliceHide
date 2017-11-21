@@ -1,10 +1,10 @@
 //待つ,,
-:,Work,
+:,Work,basic
 WaitForSeconds,2,
 WaitAction,,
 ::,,
 //冷蔵庫の中身を見に行く,,
-:,ToRefrigerator,
+:,ToRefrigerator,basic
 PlayAnimation,stand_up,false
 WaitAction,,
 PlayAnimation,walk,true
@@ -37,7 +37,7 @@ PlayAnimation,work,true
 WaitAction,,
 ::,,
 //ポスターを見に行く,,
-:,ToPoster,
+:,ToPoster,basic
 PlayAnimation,stand_up,false
 WaitAction,,
 PlayAnimation,walk,true
@@ -70,7 +70,7 @@ PlayAnimation,work,true
 WaitAction,,
 ::,,
 //ロッカーを開けに行く,,
-:,ToLocker,
+:,ToLocker,basic
 PlayAnimation,stand_up,false
 WaitAction,,
 PlayAnimation,walk,true
@@ -103,7 +103,7 @@ PlayAnimation,work,true
 WaitAction,,
 ::,,
 //キッチンで皿を洗う,,
-:,ToKichenAndDoDishes,
+:,ToKichenAndDoDishes,basic
 PlayAnimation,stand_up,false
 WaitAction,,
 PlayAnimation,walk,true
@@ -136,7 +136,7 @@ PlayAnimation,work,true
 WaitAction,,
 ::,,
 //植木に水をあげる1,,
-:,ToPlantAndWater1,
+:,ToPlantAndWater1,basic
 PlayAnimation,stand_up,false
 WaitAction,,
 PlayAnimation,walk,true
@@ -169,7 +169,7 @@ PlayAnimation,work,true
 WaitAction,,
 ::,,
 //植木に水をあげる2,,
-:,ToPlantAndWater2,
+:,ToPlantAndWater2,basic
 PlayAnimation,stand_up,false
 WaitAction,,
 PlayAnimation,walk,true
@@ -202,7 +202,7 @@ PlayAnimation,work,true
 WaitAction,,
 ::,,
 //植木に水をあげる3,,
-:,ToPlantAndWater3,
+:,ToPlantAndWater3,basic
 PlayAnimation,stand_up,false
 WaitAction,,
 PlayAnimation,walk,true
@@ -235,7 +235,7 @@ PlayAnimation,work,true
 WaitAction,,
 ::,,
 //植木に水をあげる4,,
-:,ToPlantAndWater4,
+:,ToPlantAndWater4,basic
 PlayAnimation,stand_up,false
 WaitAction,,
 PlayAnimation,walk,true
@@ -268,7 +268,7 @@ PlayAnimation,work,true
 WaitAction,,
 ::,,
 //外を見張る,,
-:,ToOutsideAndWatchLeft,
+:,ToOutsideAndWatchLeft,basic
 PlayAnimation,stand_up,false
 WaitAction,,
 PlayAnimation,walk,true

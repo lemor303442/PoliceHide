@@ -1,5 +1,5 @@
 //生成から自分の椅子まで,,
-:,InstantiatedToMyDesk,
+:,InstantiatedToMyDesk,basic
 PlayAnimation,walk,true
 RotateTo,dest_OfficeEntranceOutside,1
 WalkTo,dest_OfficeEntranceOutside,1
@@ -25,7 +25,7 @@ PlayAnimation,work,true
 WaitAction,,
 ::,,
 //自分の椅子に帰る,,
-:,BackToMySheet,
+:,BackToMySheet,basic
 PlayAnimation,walk,true
 RotateTo,dest_sheetEnterPos,1
 WalkTo,dest_sheetEnterPos,1

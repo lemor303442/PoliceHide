@@ -1,5 +1,5 @@
 //うんちを掃除する,,
-:,CleanPoop,
+:,CleanPoop,preferencial
 RotateTo,dest_poop,0.2
 PlayAnimation,LookBack,false
 WaitAction,,
