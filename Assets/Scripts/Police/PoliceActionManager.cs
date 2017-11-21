@@ -239,7 +239,7 @@ namespace Polices
 			string[] newLog = new string[2]{Time.time.ToString("f3"),log};
 			logList.Add(newLog);
 			string path = "Logs/PoliceLog" + policeParams.policeID.ToString() + ".csv";
-			csvManager.WriteData(path,logList);
+			CsvManager.WriteData(path,logList);
 		}
 
 

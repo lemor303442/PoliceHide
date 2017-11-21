@@ -5,11 +5,28 @@ using System.Collections.Generic;
 using System.Text;
 
 
-public class csvManager
+public class CsvManager
 {
 	/// <summary>
 	/// Resourcesフォルダ内のcsvファイルを読み込み、string型2次元配列で返す。
+	/// example) CsvManager.ReadTextFile("Commands/BasicCommands.csv")
 	/// </summary>
+	public static string ReadTextFile (string dataPath)
+	{
+		string data;
+		string textData = OpenTextFile (GetPath () + dataPath);
+		if (textData != "ERROR") {
+			data = textData;
+		} else {
+			data = "";
+		}
+
+		if (string.IsNullOrEmpty(data)) {
+			return null;
+		}
+		return data;
+	}
+
 	public static string[,] ReadCsvFile (string dataPath)
 	{
 		string data;
@@ -17,7 +34,7 @@ public class csvManager
 		if (textData != "ERROR") {
 			data = textData;
 		} else {
-			TextAsset textAsset = (TextAsset)Resources.Load (dataPath.Split ("." [0]) [0]);
+			TextAsset textAsset = (TextAsset)Resources.Load (dataPath.Split ('.') [0]);
 			data = textAsset.ToString ();
 		}
 
@@ -84,6 +101,41 @@ public class csvManager
 				}
 			}
 		}
+		FileStream fs = new FileStream (GetPath () + dataPath, FileMode.Create);
+		StreamWriter sw = new StreamWriter (fs);
+		sw.Write (stringData);
+		sw.Flush ();
+		sw.Close ();
+	}
+
+	public static void WriteData (string dataPath, string data)
+	{
+		string[] dataRows = data.Split('\n');
+		int rowCount = dataRows.Length;
+		int colCount = dataRows[0].Split(',').Length;
+		string[,] newData = new string[rowCount,colCount];
+
+		for(int i = 0; i<rowCount; i++){
+			string[] dataCols = dataRows[i].Split(',');
+			for(int j = 0; j<colCount; j++){
+				newData[i,j] = dataCols[j];
+			}
+		}
+
+
+		string stringData = "";
+		for (int i = 0; i < newData.GetLength (0); i++) {
+			for (int j = 0; j < newData.GetLength (1); j++) {
+				if (j < newData.GetLength (1) - 1) {
+					stringData += newData [i, j] + ",";
+				} else if (j == newData.GetLength (1) - 1 && i < newData.GetLength (0) - 1) {
+					stringData += newData [i, j] + "\n";
+				} else {
+					stringData += newData [i, j];
+				}
+			}
+		}
+		Debug.Log (GetPath () + dataPath);
 		FileStream fs = new FileStream (GetPath () + dataPath, FileMode.Create);
 		StreamWriter sw = new StreamWriter (fs);
 		sw.Write (stringData);
