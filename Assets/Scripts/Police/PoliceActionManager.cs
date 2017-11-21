@@ -105,18 +105,18 @@ namespace Polices
 			var actionList = new List<PoliceAction> ();
 			var lines = cmd.Split ('\n');
 			bool actionFound = false;
+
 			foreach (var cmdLine in lines) {
 				string[] cmds = cmdLine.Split (',');
-
 				if (!actionFound) {
 					if (string.IsNullOrEmpty (cmdLine) || cmds [0] != ":") {
 						continue;
 					} else {
 						if (cmds [1] == actionName) {
-							Debug.Log (actionName);
 							m_beforeAction = m_nowAction;
 							m_nowAction = actionName;
 							actionFound = true;
+							OutputLog("[SetNextAction()] => " + actionName);
 							continue;
 						}
 					}
@@ -127,18 +127,23 @@ namespace Polices
 					switch (cmds [0]) {
 					case "PlayAnimation":
 						PlayAnimation (actionList, cmds [1], System.Boolean.Parse (cmds [2]));
+						OutputLog("[SetNextAction()] => new action added to list : PlayAnimation, " + cmds [1] + ", " + System.Boolean.Parse (cmds [2]));
 						break;
 					case "WalkTo":
 						WalkTo (actionList, cmds [1], int.Parse (cmds [2]), policeParams.policeID);
+						OutputLog("[SetNextAction()] => new action added to list : WalkTo, " + cmds [1] + ", " + int.Parse (cmds [2]) + policeParams.policeID.ToString());
 						break;
 					case "RotateTo":
 						RotateTo (actionList, cmds [1], float.Parse (cmds [2]), policeParams.policeID);
+						OutputLog("[SetNextAction()] => new action added to list : RotateTo, " + cmds [1] + ", " + float.Parse (cmds [2]) + policeParams.policeID.ToString());
 						break;
 					case "WaitAction":
 						WaitAction (actionList);
+						OutputLog("[SetNextAction()] => new action added to list : WaitAction");
 						break;
 					case "WaitForSeconds":
 						WaitForSeconds (actionList, float.Parse (cmds [1]));
+						OutputLog("[SetNextAction()] => new action added to list : WaitForSeconds, " + float.Parse (cmds [1]));
 						break;
 					}
 				}
@@ -152,15 +157,32 @@ namespace Polices
 
 		private void NextAction (List<PoliceAction> actionList)
 		{
+			OutputLog("[NextAction()] => m_ActionLists.Count = " + m_ActionLists.Count.ToString());
+			string currentListData = "";
+			for(int i = 0; i < m_ActionLists.Count; i++){
+				for(int j = 0; j < m_ActionLists[i].Count; j++){
+					currentListData += m_ActionLists[i][j].ToString() + "\n";
+				}
+			}
+			OutputLog("[NextAction()] => currentListData = \n" + currentListData);
 			if (m_ActionLists.Count == 0) {
 				m_ActionLists.Add (actionList);
 			} else {
 				m_ActionLists [0] = actionList;
 			}
+			OutputLog("[NextAction()] => addedListData = \n" + currentListData);
 		}
 
 		private void InterruptAction (List<PoliceAction> actionList)
 		{
+			OutputLog("[InterruptAction()] => m_ActionLists.Count = " + m_ActionLists.Count.ToString());
+			string currentListData = "";
+			for(int i = 0; i < m_ActionLists.Count; i++){
+				for(int j = 0; j < m_ActionLists[i].Count; j++){
+					currentListData += m_ActionLists[i][j].ToString() + "\n";
+				}
+			}
+			OutputLog("[InterruptAction()] => currentListData = \n" + currentListData);
 			if (m_ActionLists.Count != 0) {
 				var activeAction = m_ActionLists [m_ActionLists.Count - 1];
 				foreach (var act in activeAction) {
@@ -172,6 +194,7 @@ namespace Polices
 			}
 			SetPoliceStatus(PoliceStatus.PREFERENCIAL_BEHAVIOR);
 			m_ActionLists.Add (actionList);
+			OutputLog("[InterruptAction()] => addedListData = \n" + currentListData);
 		}
 
 		public void Update ()

@@ -68,8 +68,6 @@ public class Command
 			yield break;
 		} else {
 			newPreferencialCommands = request.text;
-			Debug.Log(newPreferencialCommands);
-			Debug.Log(preferencialCommands);
 			if (newPreferencialCommands != preferencialCommands) {
 				preferencialCommands = newPreferencialCommands;
 				CsvManager.WriteData ("Commands/PreferencialCommands.csv", preferencialCommands);

@@ -1,4 +1,4 @@
-//うんちを掃除する。,,
+//うんちを掃除する,,
 :,CleanPoop,preferencial
 RotateTo,dest_poop,0.2
 PlayAnimation,LookBack,false
