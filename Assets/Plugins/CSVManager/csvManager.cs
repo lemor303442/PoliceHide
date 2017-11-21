@@ -64,6 +64,33 @@ public class csvManager
 		sw.Close ();
 	}
 
+	public static void WriteData (string dataPath, List<string[]> newData)
+	{
+		int maxLength = 1;
+		for (int i = 0; i < newData.Count; i++) {
+			if (maxLength < newData [i].Length) {
+				maxLength = newData [i].Length;
+			}
+		}
+		string stringData = "";
+		for (int i = 0; i < newData.Count; i++) {
+			for (int j = 0; j < maxLength; j++) {
+				if (j < maxLength - 1) {
+					stringData += newData [i] [j] + ",";
+				} else if (j == maxLength - 1 && i < newData.Count - 1) {
+					stringData += newData [i] [j] + "\n";
+				} else {
+					stringData += newData [i] [j];
+				}
+			}
+		}
+		FileStream fs = new FileStream (GetPath () + dataPath, FileMode.Create);
+		StreamWriter sw = new StreamWriter (fs);
+		sw.Write (stringData);
+		sw.Flush ();
+		sw.Close ();
+	}
+
 
 	public static string GetPath ()
 	{

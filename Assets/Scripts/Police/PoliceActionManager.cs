@@ -53,7 +53,7 @@ namespace Polices
 
 		private void GetBasicBehaviors ()
 		{
-			string cmd = basicCommands.ToString ();
+			string cmd = basicCommands;
 
 			var lines = cmd.Split ('\n');
 			foreach (var cmdLine in lines) {
@@ -88,6 +88,9 @@ namespace Polices
 			}
 			policeParams.policeStatus = PoliceStatus.BASIC_BEHAVIOR;
 			SetNextAction (actionName, 0);
+
+			string log = "[ThinkNextAction()] action decided => " + actionName;
+			OutputLog(log);
 		}
 
 		/// <summary>
@@ -95,7 +98,7 @@ namespace Polices
 		/// </summary>
 		private void SetNextAction (string actionName, int actionType)
 		{
-			string cmd = basicCommands.ToString () + otherCommand.ToString () + preferencialCommands.ToString ();
+			string cmd = basicCommands + otherCommands + preferencialCommands;
 
 			var actionList = new List<PoliceAction> ();
 			var lines = cmd.Split ('\n');
@@ -223,6 +226,20 @@ namespace Polices
 				ThinkNextAction ();
 			}
 		}
+
+
+		List<string[]> logList = new List<string[]>();
+		private void OutputLog(string log){
+			if(logList.Count == 0){
+				string[] todayDate = new string[2]{"Played Date", System.DateTime.Now.ToString()};
+				logList.Add(todayDate);
+			}
+			string[] newLog = new string[2]{Time.time.ToString("f3"),log};
+			logList.Add(newLog);
+			string path = "Logs/PoliceLog" + policeParams.policeID.ToString() + ".csv";
+			csvManager.WriteData(path,logList);
+		}
+
 
 		private void WaitAction (List<PoliceAction> list)
 		{
