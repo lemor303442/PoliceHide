@@ -8,20 +8,25 @@ public class EventManager : MonoBehaviour {
 	public List<PoliceActionManager> policeActionManagers = new List<PoliceActionManager>();
 
 	[SerializeField]
-	public bool poopFlg;
+//	public bool poopFlg;
 
 	void Update(){
-		if(poopFlg){
-			SendEventToPolices("Poop");
-			poopFlg = false;
-		}
+		
 	}
 
-	void SendEventToPolices(string name){
+	private void SendEventToPolices(string name){
 		foreach(var item in policeActionManagers){
 			item.RecieveEvents(name);
 		}
 	}
+
+	public void EventPoopTrigger(int id){
+		//一番近くて、暇してるポリスを探す
+		//とりあえずデバックでpolcieId=1番のポリスに送ることにする。
+		GameObject.Find("Police(Clone)").GetComponent<PoliceActionManager>().RecieveEvents("Poop", id);
+	}
+
+
 
 	public void AddPolice(PoliceActionManager pam){
 		policeActionManagers.Add(pam);

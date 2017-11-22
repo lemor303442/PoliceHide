@@ -67,11 +67,11 @@ namespace Polices
 			}
 		}
 
-		public void RecieveEvents (string name)
+		public void RecieveEvents (string name, int index = 0)
 		{
 			OutputLog ("[RecieveEvents()] => called");
 			if (name == "Poop") {
-				SetNextAction ("CleanPoop", 1);
+				SetNextAction ("CleanPoop", 1, index);
 			}
 		}
 
@@ -108,8 +108,9 @@ namespace Polices
 
 		/// <summary>
 		/// Sets the next action.(Action type -- 1:BasicAction, 2:PreferencialAction)
+		/// indexは色々と使う値があれば、入れる
 		/// </summary>
-		private void SetNextAction (string actionName, int actionType)
+		private void SetNextAction (string actionName, int actionType, int index = 0)
 		{
 			OutputLog ("[SetNextAction()] => called");
 			string cmd = basicCommands + otherCommands + preferencialCommands;
@@ -139,23 +140,26 @@ namespace Polices
 					switch (cmds [0]) {
 					case "PlayAnimation":
 						PlayAnimation (actionList, cmds [1], System.Boolean.Parse (cmds [2]));
-//						OutputLog ("[SetNextAction()] => new action added to list : PlayAnimation, " + cmds [1] + ", " + System.Boolean.Parse (cmds [2]));
 						break;
 					case "WalkTo":
-						WalkTo (actionList, cmds [1], int.Parse (cmds [2]), policeParams.policeID);
-//						OutputLog ("[SetNextAction()] => new action added to list : WalkTo, " + cmds [1] + ", " + int.Parse (cmds [2]) + policeParams.policeID.ToString ());
+						if (index == 0) {
+							WalkTo (actionList, cmds [1], int.Parse (cmds [2]), policeParams.policeID);
+						} else {
+							WalkTo (actionList, cmds [1] + index.ToString (), int.Parse (cmds [2]), policeParams.policeID);
+						}
 						break;
 					case "RotateTo":
-						RotateTo (actionList, cmds [1], float.Parse (cmds [2]), policeParams.policeID);
-//						OutputLog ("[SetNextAction()] => new action added to list : RotateTo, " + cmds [1] + ", " + float.Parse (cmds [2]) + policeParams.policeID.ToString ());
+						if (index == 0) {
+							RotateTo (actionList, cmds [1], float.Parse (cmds [2]), policeParams.policeID);
+						} else {
+							RotateTo (actionList, cmds [1] + index.ToString (), float.Parse (cmds [2]), policeParams.policeID);
+						}
 						break;
 					case "WaitAction":
 						WaitAction (actionList);
-//						OutputLog ("[SetNextAction()] => new action added to list : WaitAction");
 						break;
 					case "WaitForSeconds":
 						WaitForSeconds (actionList, float.Parse (cmds [1]));
-//						OutputLog ("[SetNextAction()] => new action added to list : WaitForSeconds, " + float.Parse (cmds [1]));
 						break;
 					}
 				}

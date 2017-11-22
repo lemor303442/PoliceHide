@@ -11,7 +11,7 @@ public class PlaySceneController : MonoBehaviour {
 	public GameObject pause_image;
 	public Text score_text;
 	public Text finish_score_text;
-	int score = 0;
+	[SerializeField] int score = 0;
 	int point = 0;
 	// Use this for initialization
 	void Start () {
@@ -72,6 +72,9 @@ public class PlaySceneController : MonoBehaviour {
 			break;
 		case 4:
 			score += 100000 * count;
+			break;
+		case 5:
+			score += 500000 * count;
 			break;
 		}
 	}

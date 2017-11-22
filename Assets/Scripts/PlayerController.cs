@@ -2,20 +2,27 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerController : MonoBehaviour {
+public class PlayerController : MonoBehaviour
+{
 
-	// Use this for initialization
-	void Start () {
-		
-	}
+	int poopId = 1;
+
+
+
 	
-	// Update is called once per frame
-	void Update () {
-		if(Input.GetKeyDown("p")){
-			GameObject poop = new GameObject();
-			poop.name = "dest_poop";
-			poop.transform.position = this.transform.position;
-			GameObject.FindObjectOfType<EventManager>().poopFlg = true;
+	void Update ()
+	{
+		if (Input.GetKeyDown ("p")) {
+			InstantiatePoop ();
 		}
+	}
+
+	public void InstantiatePoop ()
+	{
+		GameObject obj = new GameObject ();
+		obj.name = "dest_poop" + poopId.ToString ();
+		obj.transform.position = this.transform.position;
+		GameObject.FindObjectOfType<EventManager> ().EventPoopTrigger(poopId);
+		poopId++;
 	}
 }

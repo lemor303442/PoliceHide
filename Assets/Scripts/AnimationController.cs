@@ -17,12 +17,12 @@ public class AnimationController : MonoBehaviour {
 	[SerializeField]
 	private PlaySceneController playSceneController;
 	float preNormalizedTime;
-	int count = 1;
+	int count;
 	int NowAnimation = 0;
 	public GameObject slider_canvas;
 	public Slider slider;
 	public GameObject main_camera;
-	bool isplaying = true;
+	bool isPlaying = true;
 
 	void Start(){
 		_animator = GetComponent <Animator> ();
@@ -60,9 +60,12 @@ public class AnimationController : MonoBehaviour {
 			.OnStateUpdateObservable
 			.Subscribe (x => {
 				if (Mathf.FloorToInt (x.normalizedTime) - Mathf.FloorToInt (preNormalizedTime) == 1 && x.fullPathHash != -648720422) {
-				//整数値が増えた時の処理
+					//整数値が増えた時の処理
 					count++;
 					//playSceneController.CheckScore(x.fullPathHash.ToString(),count);
+					// animationが終了した時の処理
+					// もしanimationがpoopだったら、playerContollerのinstantiatepoopを呼ぶ
+
 			}
 			preNormalizedTime = x.normalizedTime;
 		});
@@ -79,7 +82,7 @@ public class AnimationController : MonoBehaviour {
 	void OnTriggerStay(Collider other){
 		if (other.gameObject.tag == "Eyesite") {
 			if (animInfo.nameHash != Animator.StringToHash ("Base Layer.Grounded")) {
-				isplaying = false;
+				isPlaying = false;
 				slider.gameObject.SetActive(false);
 				main_camera.GetComponent<TonemappingColorGrading> ().enabled = true;
 				main_camera.GetComponent<CameraController> ().checker = false;
@@ -109,11 +112,14 @@ public class AnimationController : MonoBehaviour {
 		case 4:
 			_animator.SetBool ("FallFlat", true);
 			break;
+		case 5:
+			_animator.SetBool("Poop", true);
+			break;
 		}
 	}
 
 	public void ButtonClickUp(int id){
-		if (isplaying) {
+		if (isPlaying) {
 			switch (NowAnimation) {
 			case 1:
 				_animator.SetBool ("Dance", false);
@@ -126,6 +132,9 @@ public class AnimationController : MonoBehaviour {
 				break;
 			case 4:
 				_animator.SetBool ("FallFlat", false);
+				break;
+			case 5:
+				_animator.SetBool("Poop", false);
 				break;
 			}
 		}
