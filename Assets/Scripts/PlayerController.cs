@@ -19,7 +19,7 @@ public class PlayerController : MonoBehaviour
 
 	public void InstantiatePoop ()
 	{
-		GameObject obj = new GameObject ();
+		GameObject obj = Instantiate(Resources.Load("Prefabs/Poop")) as GameObject;
 		obj.name = "dest_poop" + poopId.ToString ();
 		obj.transform.position = this.transform.position;
 		GameObject.FindObjectOfType<EventManager> ().EventPoopTrigger(poopId);

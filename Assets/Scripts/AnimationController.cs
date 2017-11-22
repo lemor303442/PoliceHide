@@ -5,7 +5,8 @@ using UniRx;
 using UnityEngine.UI;
 using UnityStandardAssets.CinematicEffects;
 
-public class AnimationController : MonoBehaviour {
+public class AnimationController : MonoBehaviour
+{
 	private Animator _animator;
 	AnimatorStateInfo animInfo;
 	private StateMachineObservalbes _stateMachineObservables;
@@ -24,7 +25,8 @@ public class AnimationController : MonoBehaviour {
 	public GameObject main_camera;
 	bool isPlaying = true;
 
-	void Start(){
+	void Start ()
+	{
 		_animator = GetComponent <Animator> ();
 		_stateMachineObservables = _animator.GetBehaviour <StateMachineObservalbes> ();
 
@@ -32,58 +34,65 @@ public class AnimationController : MonoBehaviour {
 		_stateMachineObservables
 			.OnStateEnterObservable
 			.Subscribe (x => {
-				AnimStateFinished = false;
-				isAnimStateChanging = true;
-				Debug.Log(x.fullPathHash);
-				Debug.Log("開始");
-			});
+			AnimStateFinished = false;
+			isAnimStateChanging = true;
+			Debug.Log (x.fullPathHash);
+			Debug.Log ("開始");
+		});
 
 		//animationState変更時にAnimStateFinishedをfalseに変更する
 		_stateMachineObservables
 			.OnStateExitObservable
 			.Subscribe (x => {
-				AnimStateFinished = false;
-				isAnimStateChanging = false;
-			});
+			AnimStateFinished = false;
+			isAnimStateChanging = false;
+		});
 
 		//normalizedTimeの値を監視、1を超えたらAnimStteFinishedをtrueに変更する
 		_stateMachineObservables
 			.OnStateUpdateObservable 
-			.Where(x => x.normalizedTime >= 1)
-			.Where(x => !AnimStateFinished)
-			.Where(x => !isAnimStateChanging)
+			.Where (x => x.normalizedTime >= 1)
+			.Where (x => !AnimStateFinished)
+			.Where (x => !isAnimStateChanging)
 			.Subscribe (x => {
-				AnimStateFinished = true;
-			});	//AnimatorのRestパラメータをTrueにする
+			AnimStateFinished = true;
+		});	//AnimatorのRestパラメータをTrueにする
 
 		_stateMachineObservables
 			.OnStateUpdateObservable
 			.Subscribe (x => {
-				if (Mathf.FloorToInt (x.normalizedTime) - Mathf.FloorToInt (preNormalizedTime) == 1 && x.fullPathHash != -648720422) {
-					//整数値が増えた時の処理
-					count++;
-					//playSceneController.CheckScore(x.fullPathHash.ToString(),count);
-					// animationが終了した時の処理
-					// もしanimationがpoopだったら、playerContollerのinstantiatepoopを呼ぶ
-
-			}
+			if (Mathf.FloorToInt (x.normalizedTime) - Mathf.FloorToInt (preNormalizedTime) == 1 && x.fullPathHash != -648720422) {
+				//整数値が増えた時の処理
+				count++;
+				Debug.Log ("count++");
+				// poopのanimation終了場合
+				if (x.normalizedTime - preNormalizedTime < 1 && animInfo.fullPathHash == -1220629825) {
+					this.GetComponent<PlayerController> ().InstantiatePoop ();
+				}
+				//playSceneController.CheckScore(x.fullPathHash.ToString(),count);
+				// animationが終了した時の処理
+				// もしanimationがpoopだったら、playerContollerのinstantiatepoopを呼ぶ
+			}	
 			preNormalizedTime = x.normalizedTime;
 		});
 		
 	}
-	void Update(){
-		slider_canvas.transform.LookAt(main_camera.transform);
-		animInfo = _animator.GetCurrentAnimatorStateInfo(0);
+
+	void Update ()
+	{
+		slider_canvas.transform.LookAt (main_camera.transform);
+		animInfo = _animator.GetCurrentAnimatorStateInfo (0);
 		if (animInfo.nameHash != Animator.StringToHash ("Base Layer.Grounded")) {
 			slider.value = animInfo.normalizedTime - count;
 		}
 	}
 
-	void OnTriggerStay(Collider other){
+	void OnTriggerStay (Collider other)
+	{
 		if (other.gameObject.tag == "Eyesite") {
 			if (animInfo.nameHash != Animator.StringToHash ("Base Layer.Grounded")) {
 				isPlaying = false;
-				slider.gameObject.SetActive(false);
+				slider.gameObject.SetActive (false);
 				main_camera.GetComponent<TonemappingColorGrading> ().enabled = true;
 				main_camera.GetComponent<CameraController> ().checker = false;
 				Time.timeScale = 0.5f;
@@ -93,11 +102,12 @@ public class AnimationController : MonoBehaviour {
 		}
 	}
 
-	public void ButtonClick(int id){
+	public void ButtonClick (int id)
+	{
 		count = 0;
 		isButtonPressed = !isButtonPressed;
 		NowAnimation = id;
-		slider_canvas.SetActive(true);
+		slider_canvas.SetActive (true);
 		//どのボタンが押されたかを判断
 		switch (NowAnimation) {
 		case 1:
@@ -113,12 +123,13 @@ public class AnimationController : MonoBehaviour {
 			_animator.SetBool ("FallFlat", true);
 			break;
 		case 5:
-			_animator.SetBool("Poop", true);
+			_animator.SetBool ("Poop", true);
 			break;
 		}
 	}
 
-	public void ButtonClickUp(int id){
+	public void ButtonClickUp (int id)
+	{
 		if (isPlaying) {
 			switch (NowAnimation) {
 			case 1:
@@ -134,12 +145,12 @@ public class AnimationController : MonoBehaviour {
 				_animator.SetBool ("FallFlat", false);
 				break;
 			case 5:
-				_animator.SetBool("Poop", false);
+				_animator.SetBool ("Poop", false);
 				break;
 			}
 		}
-		slider_canvas.SetActive(false);
-		playSceneController.CheckScore(NowAnimation,count);
+		slider_canvas.SetActive (false);
+		playSceneController.CheckScore (NowAnimation, count);
 		count = 0;
 		NowAnimation = 0;
 		//hashと何回連続で行ったか
