@@ -64,14 +64,10 @@ public class AnimationController : MonoBehaviour
 			if (Mathf.FloorToInt (x.normalizedTime) - Mathf.FloorToInt (preNormalizedTime) == 1 && x.fullPathHash != -648720422) {
 				//整数値が増えた時の処理
 				count++;
-				Debug.Log ("count++");
 				// poopのanimation終了場合
 				if (x.normalizedTime - preNormalizedTime < 1 && animInfo.fullPathHash == -1220629825) {
 					this.GetComponent<PlayerController> ().InstantiatePoop ();
 				}
-				//playSceneController.CheckScore(x.fullPathHash.ToString(),count);
-				// animationが終了した時の処理
-				// もしanimationがpoopだったら、playerContollerのinstantiatepoopを呼ぶ
 			}	
 			preNormalizedTime = x.normalizedTime;
 		});
