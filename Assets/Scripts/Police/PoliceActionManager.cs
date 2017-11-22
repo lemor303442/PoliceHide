@@ -38,8 +38,8 @@ namespace Polices
 			m_ActionLists = new List<List<PoliceAction>> ();
 			GetBasicBehaviors ();
 
-			CleanLog();
-			OutputLog("Played Date:" + System.DateTime.Now.ToString ());
+			CleanLog ();
+			OutputLog ("Played Date:" + System.DateTime.Now.ToString ());
 			OutputLog ("[Start()] => Instantiated");
 			SetPoliceStatus (PoliceStatus.BASIC_BEHAVIOR);
 			m_beforeAction = "Work";
@@ -48,11 +48,13 @@ namespace Polices
 
 		public string GetNowAction ()
 		{
+			OutputLog ("[GetNowAction()] => called");
 			return m_nowAction;
 		}
 
 		private void GetBasicBehaviors ()
 		{
+			OutputLog ("[GetBasicBehaviors()] => called");
 			string cmd = basicCommands;
 
 			var lines = cmd.Split ('\n');
@@ -67,6 +69,7 @@ namespace Polices
 
 		public void RecieveEvents (string name)
 		{
+			OutputLog ("[RecieveEvents()] => called");
 			if (name == "Poop") {
 				SetNextAction ("CleanPoop", 1);
 			}
@@ -74,6 +77,7 @@ namespace Polices
 
 		private void ThinkNextAction ()
 		{
+			OutputLog ("[ThinkNextAction()] => called");
 			string actionName;
 			if (m_nowAction == "Work") {
 				actionName = basicBehaviors [Random.Range (0, basicBehaviors.Count)];
@@ -107,6 +111,7 @@ namespace Polices
 		/// </summary>
 		private void SetNextAction (string actionName, int actionType)
 		{
+			OutputLog ("[SetNextAction()] => called");
 			string cmd = basicCommands + otherCommands + preferencialCommands;
 
 			var actionList = new List<PoliceAction> ();
@@ -134,23 +139,23 @@ namespace Polices
 					switch (cmds [0]) {
 					case "PlayAnimation":
 						PlayAnimation (actionList, cmds [1], System.Boolean.Parse (cmds [2]));
-						OutputLog ("[SetNextAction()] => new action added to list : PlayAnimation, " + cmds [1] + ", " + System.Boolean.Parse (cmds [2]));
+//						OutputLog ("[SetNextAction()] => new action added to list : PlayAnimation, " + cmds [1] + ", " + System.Boolean.Parse (cmds [2]));
 						break;
 					case "WalkTo":
 						WalkTo (actionList, cmds [1], int.Parse (cmds [2]), policeParams.policeID);
-						OutputLog ("[SetNextAction()] => new action added to list : WalkTo, " + cmds [1] + ", " + int.Parse (cmds [2]) + policeParams.policeID.ToString ());
+//						OutputLog ("[SetNextAction()] => new action added to list : WalkTo, " + cmds [1] + ", " + int.Parse (cmds [2]) + policeParams.policeID.ToString ());
 						break;
 					case "RotateTo":
 						RotateTo (actionList, cmds [1], float.Parse (cmds [2]), policeParams.policeID);
-						OutputLog ("[SetNextAction()] => new action added to list : RotateTo, " + cmds [1] + ", " + float.Parse (cmds [2]) + policeParams.policeID.ToString ());
+//						OutputLog ("[SetNextAction()] => new action added to list : RotateTo, " + cmds [1] + ", " + float.Parse (cmds [2]) + policeParams.policeID.ToString ());
 						break;
 					case "WaitAction":
 						WaitAction (actionList);
-						OutputLog ("[SetNextAction()] => new action added to list : WaitAction");
+//						OutputLog ("[SetNextAction()] => new action added to list : WaitAction");
 						break;
 					case "WaitForSeconds":
 						WaitForSeconds (actionList, float.Parse (cmds [1]));
-						OutputLog ("[SetNextAction()] => new action added to list : WaitForSeconds, " + float.Parse (cmds [1]));
+//						OutputLog ("[SetNextAction()] => new action added to list : WaitForSeconds, " + float.Parse (cmds [1]));
 						break;
 					}
 				}
@@ -164,56 +169,113 @@ namespace Polices
 
 		private void NextAction (List<PoliceAction> actionList)
 		{
+			OutputLog ("[NextAction()] => called");
 			OutputLog ("[NextAction()] => m_ActionLists.Count = " + m_ActionLists.Count.ToString ());
+
 			string currentListData = "";
 			for (int i = 0; i < m_ActionLists.Count; i++) {
+				currentListData += "--------" + i.ToString () + "--------\n      ";
 				for (int j = 0; j < m_ActionLists [i].Count; j++) {
-					currentListData += m_ActionLists [i] [j].ToString () + "\n";
+					currentListData += m_ActionLists [i] [j].ToString () + "\n      ";
 				}
 			}
-			OutputLog ("[NextAction()] => currentListData = \n" + currentListData);
+			OutputLog ("[NextAction()] => currentListData = \n      " + currentListData);
+
 			if (m_ActionLists.Count == 0) {
 				m_ActionLists.Add (actionList);
 			} else {
 				m_ActionLists [0] = actionList;
 			}
-			currentListData = "";
+
+			string addedListData = "";
 			for (int i = 0; i < m_ActionLists.Count; i++) {
+				addedListData += "--------" + i.ToString () + "--------\n      ";
 				for (int j = 0; j < m_ActionLists [i].Count; j++) {
-					currentListData += m_ActionLists [i] [j].ToString () + "\n";
+					addedListData += m_ActionLists [i] [j].ToString () + "\n      ";
 				}
 			}
-			OutputLog ("[NextAction()] => addedListData = \n" + currentListData);
+			OutputLog ("[NextAction()] => addedListData = \n      " + addedListData);
 		}
 
 		private void InterruptAction (List<PoliceAction> actionList)
 		{
+			OutputLog ("[InterruptAction()] => called");
 			OutputLog ("[InterruptAction()] => m_ActionLists.Count = " + m_ActionLists.Count.ToString ());
+
 			string currentListData = "";
 			for (int i = 0; i < m_ActionLists.Count; i++) {
+				currentListData += "--------" + i.ToString () + "--------\n      ";
 				for (int j = 0; j < m_ActionLists [i].Count; j++) {
-					currentListData += m_ActionLists [i] [j].ToString () + "\n";
+					currentListData += m_ActionLists [i] [j].ToString () + "\n      ";
 				}
 			}
-			OutputLog ("[InterruptAction()] => currentListData = \n" + currentListData);
+			OutputLog ("[InterruptAction()] => currentListData = \n      " + currentListData);
+
 			if (m_ActionLists.Count != 0) {
 				var activeAction = m_ActionLists [m_ActionLists.Count - 1];
+				bool isComeBackToStartAnimActionNeeded = true;
+				bool isComeBackToDeskActionNeeded = true;
 				foreach (var act in activeAction) {
 					if (act is WaitAction) {
 						break;
 					}
+					if (act.ToString () != "Polices.StartActionAnimation" && act.ToString () != "Polices.WaitAction")
+						isComeBackToStartAnimActionNeeded = false;
+					if (act.ToString () != "Polices.WaitForSeconds" && act.ToString () != "Polices.WaitAction")
+						isComeBackToDeskActionNeeded = false;
 					act.Suspend ();
+				}
+				//現在進行中のアクションがPlayanimationとWaitActionのみだった場合、
+				//その地点へ戻るactionを追加する。
+				if (isComeBackToStartAnimActionNeeded) {
+					var comeBackAction = new List<PoliceAction> ();
+					PlayAnimation (comeBackAction, "walk", true);
+					WalkTo (comeBackAction, this.transform.position, 1);
+					RotateTo (comeBackAction, this.transform.position, 1);
+					WaitAction (comeBackAction);
+					PlayAnimation (comeBackAction, "right_turn", true);
+					RotateTo (comeBackAction, this.transform.position + this.transform.forward, 1);
+					WaitAction (comeBackAction);
+
+					for (int i = 0; i < comeBackAction.Count; i++) {
+						activeAction.Insert (0, comeBackAction [comeBackAction.Count - (i + 1)]);
+					}
+				}
+				//現在進行中のアクションがWaitForSecondsとWaitActionのみだった場合、
+				//その地点へ戻り、workAnimationを追加する。
+				if (isComeBackToDeskActionNeeded) {		
+					var comeBackAction = new List<PoliceAction> ();
+					PlayAnimation (comeBackAction, "walk", true);
+					WalkTo (comeBackAction, "dest_sheetEnterPos", 1, policeParams.policeID);
+					RotateTo (comeBackAction, "dest_sheetEnterPos", 1, policeParams.policeID);
+					WaitAction (comeBackAction);
+					PlayAnimation (comeBackAction, "walk", true);
+					WalkTo (comeBackAction, "dest_sheet", 1, policeParams.policeID);
+					RotateTo (comeBackAction, "dest_sheet", 1, policeParams.policeID);
+					WaitAction (comeBackAction);
+					PlayAnimation (comeBackAction, "right_turn", true);
+					RotateTo (comeBackAction, "dest_sheetDir", 1, policeParams.policeID);
+					WaitAction (comeBackAction);
+					PlayAnimation (comeBackAction, "sit_down", false);
+					WaitAction (comeBackAction);
+					PlayAnimation (comeBackAction, "work", true);
+					WaitAction (comeBackAction);
+					for (int i = 0; i < comeBackAction.Count; i++) {
+						activeAction.Insert (0, comeBackAction [comeBackAction.Count - (i + 1)]);
+					}
 				}
 			}
 			SetPoliceStatus (PoliceStatus.PREFERENCIAL_BEHAVIOR);
 			m_ActionLists.Add (actionList);
-			currentListData = "";
+
+			string addedListData = "";
 			for (int i = 0; i < m_ActionLists.Count; i++) {
+				addedListData += "--------" + i.ToString () + "--------\n      ";
 				for (int j = 0; j < m_ActionLists [i].Count; j++) {
-					currentListData += m_ActionLists [i] [j].ToString () + "\n";
+					addedListData += m_ActionLists [i] [j].ToString () + "\n      ";
 				}
 			}
-			OutputLog ("[InterruptAction()] => addedListData = \n" + currentListData);
+			OutputLog ("[InterruptAction()] => addedListData = \n      " + addedListData);
 		}
 
 		public void Update ()
@@ -246,13 +308,13 @@ namespace Polices
 					OutputLog ("[Update()] => currentActiveAction.Count = " + activeAction.Count.ToString ());
 					string currentActiveAction = "";
 					for (int i = 0; i < activeAction.Count; i++) {
-						currentActiveAction += activeAction [i].ToString () + "\n";
+						currentActiveAction += activeAction [i].ToString () + "\n      ";
 					}
-					OutputLog ("[Update()] => currentActiveAction = \n" + currentActiveAction);
+					OutputLog ("[Update()] => currentActiveAction = \n      " + currentActiveAction);
 					// 現在のBehaviorがすべて処理終わった場合（終わってない場合は、また上に戻る）
 					if (activeAction.Count == 0) {
 						if (m_ActionLists.Count != 0) {
-							OutputLog ("[Update()] => a behavior finished = \n" + currentActiveAction);
+							OutputLog ("[Update()] => a behavior finished = \n      " + currentActiveAction);
 							//現在のコマンドを削除
 							m_ActionLists.Remove (activeAction);
 
@@ -260,38 +322,37 @@ namespace Polices
 							string currentListData = "";
 							for (int i = 0; i < m_ActionLists.Count; i++) {
 								for (int j = 0; j < m_ActionLists [i].Count; j++) {
-									currentListData += m_ActionLists [i] [j].ToString () + "\n";
+									currentListData += m_ActionLists [i] [j].ToString () + "\n      ";
 								}
 							}
-							OutputLog ("[NextAction()] => currentListData = \n" + currentListData);
+							OutputLog ("[NextAction()] => currentListData = \n      " + currentListData);
 							//コマンドリストにまだコマンドが残っていたら、次のコマンドをセット
 							if (m_ActionLists.Count > 0) {
 								activeAction = m_ActionLists [m_ActionLists.Count - 1];
 							}
 							currentActiveAction = "";
 							for (int i = 0; i < activeAction.Count; i++) {
-								currentActiveAction += activeAction [i].ToString () + "\n";
+								currentActiveAction += activeAction [i].ToString () + "\n       ";
 							}
-							OutputLog ("[Update()] => ResumeActions = \n" + currentActiveAction);
+
 							foreach (var act in activeAction) {
 								if (act is WaitAction) {
 									break;
 								}
 								act.Resume ();
+								OutputLog ("[Update()] => ResumeActions = " + act);
 							}
 							// まったく不明
-							// 再開あるactionがない場合かな？
-//							if (activeAction.Count == 0) {
-								
-							if (m_beforeAction == "Work") {
-								OutputLog ("[Update()] => No action to resume. Set back to my sheet action.");
-								SetPoliceStatus (PoliceStatus.BASIC_BEHAVIOR);
-								//自分のシートに帰るアクションを追加する
-								SetNextAction ("BackToMySheet", 0);
-								string str = m_nowAction;
-								m_nowAction = m_beforeAction;
-								m_beforeAction = str;
-							}
+							// 再開あるactionがない場合かな？								
+//							if (m_beforeAction == "Work") {
+//								OutputLog ("[Update()] => No action to resume. Set back to my sheet action.");
+//								SetPoliceStatus (PoliceStatus.BASIC_BEHAVIOR);
+//								//自分のシートに帰るアクションを追加する
+//								SetNextAction ("BackToMySheet", 0);
+//								string str = m_nowAction;
+//								m_nowAction = m_beforeAction;
+//								m_beforeAction = str;
+//							}
 
 //							}
 						}
@@ -303,16 +364,17 @@ namespace Polices
 		}
 
 
-//		List<string[]> logList = new List<string[]> ();
+		//		List<string[]> logList = new List<string[]> ();
 
 		private void OutputLog (string log)
 		{
 			string path = "Logs/PoliceLog" + policeParams.policeID.ToString () + ".csv";
-			string currentTime = "<" + Time.time.ToString("f3") + ">   ";
+			string currentTime = "<" + Time.time.ToString ("f3") + ">   ";
 			LogManager.SaveText (path, currentTime + log, true);
 		}
 
-		private void CleanLog(){
+		private void CleanLog ()
+		{
 			string path = "Logs/PoliceLog" + policeParams.policeID.ToString () + ".csv";
 			LogManager.SaveText (path, "", false);
 		}

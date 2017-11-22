@@ -21,8 +21,24 @@ namespace Polices
 			m_repeat = repeat;
 			m_startAnim = true;
 		}
+
+		public override void Suspend () {
+			// ログ出力
+//			string path = "Logs/PoliceLog" + m_gameObject.GetComponent<PoliceParams>().policeID + ".csv";
+//			string currentTime = "<" + Time.time.ToString ("f3") + ">   ";
+//			string log = "[StartActionAnimation.Suspend()] called";
+//			LogManager.SaveText (path, currentTime + log, true);
+			isAnimSwitched = false;
+			m_startAnim = true;
+		}
 			
 		public override void Resume(){
+			// ログ出力
+//			string path = "Logs/PoliceLog" + m_gameObject.GetComponent<PoliceParams>().policeID + ".csv";
+//			string currentTime = "<" + Time.time.ToString ("f3") + ">   ";
+//			string log = "[StartActionAnimation.Resume()] called";
+//			LogManager.SaveText (path, currentTime + log, true);
+
 			float duration = 0.3f / m_animator.GetCurrentAnimatorStateInfo (0).length;
 			//				duration = 0;
 			m_animator.CrossFade (m_anim, duration);
