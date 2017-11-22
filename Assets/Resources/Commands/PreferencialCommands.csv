@@ -9,4 +9,6 @@ WalkTo,dest_poop,1
 WaitAction,,
 PlayAnimation,pick_up,false
 WaitAction,,
+DestroyObj,dest_poop,
+WaitAction,,
 ::,,

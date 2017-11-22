@@ -161,6 +161,13 @@ namespace Polices
 					case "WaitForSeconds":
 						WaitForSeconds (actionList, float.Parse (cmds [1]));
 						break;
+					case "DestroyObj":
+						if (index == 0) {
+							DestroyObj (actionList, cmds [1]);
+						} else {
+							DestroyObj (actionList, cmds [1] + index.ToString());
+						}
+						break;
 					}
 				}
 			}
@@ -454,6 +461,13 @@ namespace Polices
 			list.Add (act);
 		}
 
+		private void DestroyObj (List<PoliceAction> list, string targetObjName)
+		{
+			var act = new DestroyObj ();
+			act.SetGameObject (this.gameObject);
+			act.Init (targetObjName);
+			list.Add (act);
+		}
 
 	}
 }
