@@ -7,7 +7,10 @@ namespace Polices
 	public class PoliceActionManager : MonoBehaviour
 	{
 		//自分の情報
-		PoliceParams policeParams;
+		private PoliceParams policeParams;
+
+		public PoliceParams PoliceParams{ get { return policeParams; } }
+
 		private List<List<PoliceAction>> m_ActionLists;
 		public string m_nowAction;
 		public string m_beforeAction;
@@ -165,7 +168,7 @@ namespace Polices
 						if (index == 0) {
 							DestroyObj (actionList, cmds [1]);
 						} else {
-							DestroyObj (actionList, cmds [1] + index.ToString());
+							DestroyObj (actionList, cmds [1] + index.ToString ());
 						}
 						break;
 					}

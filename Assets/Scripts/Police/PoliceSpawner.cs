@@ -47,6 +47,6 @@ public class PoliceSpawner : MonoBehaviour
 		if (policeId - 1 == maxPoliceCount) {
 			isInstantiateEnable = false;
 		}
-		GameObject.FindObjectOfType<EventManager> ().AddPolice (policeClone.GetComponent<PoliceActionManager> ());
+		GameObject.FindObjectOfType<EventManager> ().SetPoliceActionManager (policeClone.GetComponent<PoliceActionManager> ());
 	}
 }

@@ -7,7 +7,9 @@ public class PlayerController : MonoBehaviour
 
 	int poopId = 1;
 
-
+	void Start(){
+		GameObject.FindObjectOfType<EventManager>().SetPlayerController(this);
+	}
 
 	
 	void Update ()

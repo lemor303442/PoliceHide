@@ -4,33 +4,70 @@ using UnityEngine;
 using Polices;
 using System;
 
-public class EventManager : MonoBehaviour {
+public class EventManager : MonoBehaviour
+{
 
-	public List<PoliceActionManager> policeActionManagers = new List<PoliceActionManager>();
+	public List<PoliceActionManager> policeActionManagers = new List<PoliceActionManager> ();
+	private PlayerController playerController;
 
 	private bool poopFlg;
 
-	void Update(){
+	void Update ()
+	{
 		
 	}
 
-	public void EventPoopTrigger(int id){
+	public void EventPoopTrigger (int poopId)
+	{
 		//一番近くて、暇してるポリスを探す
 		//とりあえずデバックでpolcieId=1番のポリスに送ることにする。
-		GameObject.Find("Police(Clone)").GetComponent<PoliceActionManager>().RecieveEvents("Poop", id);
-	}
+		Debug.Log("poop trigger called");
 
-	private void SendEventToPolices(string name){
-		foreach(var item in policeActionManagers){
-			item.RecieveEvents(name);
+		StartCoroutine (SearchPoliceBasicClosest ((PoliceActionManager pam) => pam.RecieveEvents ("Poop", poopId)));
+	}
+		
+	IEnumerator SearchPoliceBasicClosest (Action<PoliceActionManager> onComplete)
+	{
+		for (;;) {
+			Debug.Log("looking for SearchPoliceBasicClosest");
+			List<PoliceActionManager> basicBehaviorPoliceList = new List<PoliceActionManager> ();
+			foreach (var item in policeActionManagers) {
+				if (item.PoliceParams.policeStatus == PoliceStatus.BASIC_BEHAVIOR)
+					basicBehaviorPoliceList.Add (item);
+			}
+			Debug.Log(basicBehaviorPoliceList.Count);
+			//確認する場所が、poopからではなく、playerの座標からになってしまう。poopの座標情報をゲットしたいな。
+			if (basicBehaviorPoliceList.Count > 0) {
+				float minDistance = 1000;
+				int closestPoliceId = 0;
+				foreach (var item in basicBehaviorPoliceList) {
+					Debug.Log(minDistance);
+					float newDistance = Vector3.Distance (item.gameObject.transform.position, playerController.gameObject.transform.position);
+					if (minDistance > newDistance) {
+						minDistance = newDistance;
+						closestPoliceId = item.PoliceParams.policeID;
+					}
+				}
+				foreach (var item in basicBehaviorPoliceList) {
+					if (item.PoliceParams.policeID == closestPoliceId) {
+						onComplete (item);
+						break;
+					}
+				}
+				yield break;
+			} else {
+				yield return new UnityEngine.WaitForSeconds (0.5f);
+			}
 		}
 	}
 
-//	IEnumerator SearchPoliceBasicClosest(Action ){
-//
-//	}
+	public void SetPoliceActionManager (PoliceActionManager pam)
+	{
+		policeActionManagers.Add (pam);
+	}
 
-	public void AddPolice(PoliceActionManager pam){
-		policeActionManagers.Add(pam);
+	public void SetPlayerController (PlayerController pc)
+	{
+		playerController = pc;
 	}
 }
