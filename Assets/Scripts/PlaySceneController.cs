@@ -13,7 +13,7 @@ public class PlaySceneController : MonoBehaviour {
 	public Text finish_score_text;
 	[SerializeField] int score = 0;
 	int point = 0;
-	// Use this for initialization
+
 	void Start () {
 		Time.timeScale = 1;
 		//SceneManager.LoadScene("Stage", LoadSceneMode.Additive);

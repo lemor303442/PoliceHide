@@ -37,13 +37,10 @@ public class ScrollViewController : MonoBehaviour
 	/// 4:離した後の移動
 	/// 5:リセット
 	/// </summary>
-	[SerializeField]
 	private int scrollPhase = 5;
 
-	ScrollViewTouchInput scrollViewTouchInput = new ScrollViewTouchInput();
+	public ScrollViewTouchInput scrollViewTouchInput = new ScrollViewTouchInput();
 
-	public Text[] text;
-	bool testBool;
 
 	void Start ()
 	{
@@ -64,30 +61,17 @@ public class ScrollViewController : MonoBehaviour
 		scrollViewTouchInput.targetRect = this.gameObject.GetComponent<RectTransform>();
 		scrollViewTouchInput.affordTime = 0.2f;
 		scrollViewTouchInput.affordSize = new Vector2(30,30);
-
-		text [0].text = "scrollViewWidth = " + scrollViewWidth.ToString ();
-		text [1].text = "Screen.Width = " + Screen.width.ToString ();
 	}
 
-	public void TestButton ()
-	{
-		testBool = !testBool;
-	}
 
 	void Update ()
 	{
-		Debug.Log(scrollViewTouchInput.StartScroll);
-		if (testBool) {
-			text [2].text = "scrollViewWidth";
-		} else {
-			text [2].text = "Screen.Width";
-		}
 		scrollViewTouchInput.Update();
 
 		switch (scrollPhase) {
 		case 0:
 			//待機中
-			if (scrollViewTouchInput.StartScroll)
+			if (scrollViewTouchInput.isScrollable)
 				scrollPhase++;
 			break;
 		case 1:
