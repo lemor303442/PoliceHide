@@ -39,7 +39,7 @@ public class AnimationController : MonoBehaviour
 		_animator = GetComponent <Animator> ();
 		_stateMachineObservables = _animator.GetBehaviour <StateMachineObservalbes> ();
 		dataManager = GameObject.FindObjectOfType<DataManager> ();
-		scrollViewController = GameObject.FindObjectOfType<ScrollViewController>();
+		scrollViewController = GameObject.FindObjectOfType<ScrollViewController> ();
 
 		InstantiateAnimationButtons ();
 
@@ -49,8 +49,6 @@ public class AnimationController : MonoBehaviour
 			.Subscribe (x => {
 			AnimStateFinished = false;
 			isAnimStateChanging = true;
-			Debug.Log (x.fullPathHash);
-			Debug.Log ("開始");
 		});
 
 		//animationState変更時にAnimStateFinishedをfalseに変更する
@@ -90,7 +88,7 @@ public class AnimationController : MonoBehaviour
 
 	void Update ()
 	{
-		ButtonFunction();
+		ButtonFunction ();
 	}
 
 	void OnTriggerStay (Collider other)
@@ -119,7 +117,7 @@ public class AnimationController : MonoBehaviour
 
 				var eventPointerDown = new EventTrigger.Entry ();
 				eventPointerDown.eventID = EventTriggerType.PointerDown;
-				int buttonId = i+1;
+				int buttonId = i + 1;
 				eventPointerDown.callback.AddListener ((x) => ButtonDown (buttonId));
 				trigger.triggers.Add (eventPointerDown);
 
@@ -131,9 +129,10 @@ public class AnimationController : MonoBehaviour
 		}
 	}
 
-	private void ButtonFunction(){
+	private void ButtonFunction ()
+	{
 		//ボタンを押した時
-		if(isButtonDown && scrollViewController.scrollViewTouchInput.IsButtonFuncEnable){
+		if (isButtonDown && scrollViewController.scrollViewTouchInput.isButtonFuncEnable) {
 			isButtonDown = false;
 
 			count = 0;
@@ -159,14 +158,15 @@ public class AnimationController : MonoBehaviour
 			}
 		}
 		//ボタンを推してる間
-		if(scrollViewController.scrollViewTouchInput.IsButtonFuncEnable){
+		if (scrollViewController.scrollViewTouchInput.isButtonFuncEnable) {
 			slider_canvas.transform.LookAt (main_camera.transform);
 			animInfo = _animator.GetCurrentAnimatorStateInfo (0);
 			if (animInfo.nameHash != Animator.StringToHash ("Base Layer.Grounded")) {
 				slider.value = animInfo.normalizedTime - count;
-			}		}
+			}
+		}
 		//ボタンを離した時
-		if(isButtonUp && !scrollViewController.scrollViewTouchInput.IsButtonFuncEnable){
+		if (isButtonUp && !scrollViewController.scrollViewTouchInput.isButtonFuncEnable) {
 			isButtonUp = false;
 
 			if (isPlaying) {

@@ -39,16 +39,16 @@ public class ScrollViewController : MonoBehaviour
 	/// </summary>
 	private int scrollPhase = 5;
 
-	public ScrollViewTouchInput scrollViewTouchInput = new ScrollViewTouchInput();
+	public ScrollViewTouchInput scrollViewTouchInput = new ScrollViewTouchInput ();
 
 
 	void Start ()
 	{
 		//set screen ratio;
 		if (Screen.width * (canvasScaler.referenceResolution.y / canvasScaler.referenceResolution.x) <= Screen.height) {
-			screenRatio = canvasScaler.referenceResolution.x/Screen.width;
+			screenRatio = canvasScaler.referenceResolution.x / Screen.width;
 		} else {
-			screenRatio = canvasScaler.referenceResolution.y/Screen.height;
+			screenRatio = canvasScaler.referenceResolution.y / Screen.height;
 		}
 
 		scrollTargetRect = this.transform.Find ("Content").GetComponent<RectTransform> ();
@@ -57,16 +57,16 @@ public class ScrollViewController : MonoBehaviour
 
 		//ScrollViewTouchInputに初期値を渡す
 		scrollViewTouchInput.screenToCanvasRatio = screenRatio;
-		scrollViewTouchInput.canvasSize = new Vector2(canvasScaler.referenceResolution.x, canvasScaler.referenceResolution.y);
-		scrollViewTouchInput.targetRect = this.gameObject.GetComponent<RectTransform>();
+		scrollViewTouchInput.canvasSize = new Vector2 (canvasScaler.referenceResolution.x, canvasScaler.referenceResolution.y);
+		scrollViewTouchInput.targetRect = this.gameObject.GetComponent<RectTransform> ();
 		scrollViewTouchInput.affordTime = 0.2f;
-		scrollViewTouchInput.affordSize = new Vector2(30,30);
+		scrollViewTouchInput.affordSize = new Vector2 (30, 30);
 	}
 
 
 	void Update ()
 	{
-		scrollViewTouchInput.Update();
+		scrollViewTouchInput.Update ();
 
 		switch (scrollPhase) {
 		case 0:

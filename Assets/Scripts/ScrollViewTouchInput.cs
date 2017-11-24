@@ -5,8 +5,9 @@ using UnityEngine;
 public class ScrollViewTouchInput
 {
 	//読み取るための値
-	public bool isScrollable{ get; private set;}
-	public bool IsButtonFuncEnable{ get; private set; }
+	public bool isScrollable{ get; private set; }
+
+	public bool isButtonFuncEnable{ get; private set; }
 
 
 	//受け取る値
@@ -36,21 +37,27 @@ public class ScrollViewTouchInput
 			touchedPos = Input.mousePosition;
 			isTouching = IsInTargetRect (touchedPos);
 			touchingTimer = 0;
+			isScrollable = false;
+			isButtonFuncEnable = false;
 		}
 		if (isTouching) {
-			touchingTimer += Time.deltaTime;
-			if (touchingTimer < affordTime) {
-				if (IsInAfforSize (Input.mousePosition, touchedPos) == false) {
-					isScrollable = true;
+			if (!isButtonFuncEnable && !isScrollable) {
+				touchingTimer += Time.deltaTime;
+				if (touchingTimer < affordTime) {
+					if (!IsInAfforSize (Input.mousePosition, touchedPos)) {
+						Debug.Log("isScrollable true");
+						isScrollable = true;
+					}
+				} else {
+					isButtonFuncEnable = true;
+					Debug.Log("isScrollable false");
 				}
-			} else {
-				IsButtonFuncEnable = true;
 			}
 		}
 		if (Input.GetMouseButtonUp (0)) {
 			isTouching = false;
 			isScrollable = false;
-			IsButtonFuncEnable = false;
+			isButtonFuncEnable = false;
 		}
 	}
 
@@ -58,8 +65,10 @@ public class ScrollViewTouchInput
 	{
 		Vector2 touchingCanvasPos = ScreenToCanvasPos (mousePos);
 		Vector2 touchedCanvasPos = ScreenToCanvasPos (touchedPos);
-		if (touchingCanvasPos.x > touchedCanvasPos.x - affordSize.x && touchingCanvasPos.x < touchedCanvasPos.x + affordSize.x) {
-			if (touchingCanvasPos.y > touchedCanvasPos.y - affordSize.y && touchingCanvasPos.y < touchedCanvasPos.x + affordSize.y) {
+		Debug.Log(touchingCanvasPos + " : " + touchedCanvasPos);
+
+		if (affordSize.x > Mathf.Abs(touchingCanvasPos.x - touchedCanvasPos.x)) {
+			if (affordSize.y > Mathf.Abs(touchingCanvasPos.y - touchedCanvasPos.y)) {
 				return true;
 			}
 		}
