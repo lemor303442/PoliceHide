@@ -40,6 +40,7 @@ public class AnimationController : MonoBehaviour
 		_stateMachineObservables = _animator.GetBehaviour <StateMachineObservalbes> ();
 		dataManager = GameObject.FindObjectOfType<DataManager> ();
 		scrollViewController = GameObject.FindObjectOfType<ScrollViewController> ();
+		animInfo = _animator.GetCurrentAnimatorStateInfo (0);
 
 		InstantiateAnimationButtons ();
 
@@ -94,6 +95,8 @@ public class AnimationController : MonoBehaviour
 	void OnTriggerStay (Collider other)
 	{
 		if (other.gameObject.tag == "Eyesite") {
+			Debug.Log(animInfo.nameHash);
+			Debug.Log(Animator.StringToHash ("Base Layer.Grounded"));
 			if (animInfo.nameHash != Animator.StringToHash ("Base Layer.Grounded")) {
 				isPlaying = false;
 				slider.gameObject.SetActive (false);
