@@ -21,7 +21,7 @@ public class CsvManager
 			data = "";
 		}
 
-		if (string.IsNullOrEmpty(data)) {
+		if (string.IsNullOrEmpty (data)) {
 			return null;
 		}
 		return data;
@@ -61,6 +61,7 @@ public class CsvManager
 	/// </summary>
 	public static void WriteData (string dataPath, string[,] newData)
 	{
+		Debug.Log("[CsvManager.WriteData(string dataPath, string[,] newData)] called");
 		string stringData = "";
 		for (int i = 0; i < newData.GetLength (0); i++) {
 			for (int j = 0; j < newData.GetLength (1); j++) {
@@ -73,8 +74,26 @@ public class CsvManager
 				}
 			}
 		}
-		Debug.Log (GetPath () + dataPath);
-		FileStream fs = new FileStream (GetPath () + dataPath, FileMode.Create);
+
+		string[] directries = dataPath.Split ('/');
+		for (int i = 0; i < directries.Length-1; i++) {
+			string tmpPath = "";
+			for (int j = 0; j < i + 1; j++) {
+				tmpPath += directries [j] + "/";
+			}
+			tmpPath = tmpPath.Remove (tmpPath.Length - 1, 1);
+			if (!Directory.Exists (GetPath () + tmpPath)) {
+				Directory.CreateDirectory (GetPath () + tmpPath);
+			}
+		}
+
+		string existingString = OpenTextFile (GetPath () + dataPath);
+		FileStream fs;
+		if (existingString == "ERROR") {
+			fs = new FileStream (GetPath () + dataPath, FileMode.CreateNew);
+		} else {
+			fs = new FileStream (GetPath () + dataPath, FileMode.Create);
+		}
 		StreamWriter sw = new StreamWriter (fs);
 		sw.Write (stringData);
 		sw.Flush ();
@@ -83,6 +102,7 @@ public class CsvManager
 
 	public static void WriteData (string dataPath, List<string[]> newData)
 	{
+		Debug.Log("[CsvManager.WriteData(string dataPath, List<string[]> newData)] called");
 		int maxLength = 1;
 		for (int i = 0; i < newData.Count; i++) {
 			if (maxLength < newData [i].Length) {
@@ -101,7 +121,25 @@ public class CsvManager
 				}
 			}
 		}
-		FileStream fs = new FileStream (GetPath () + dataPath, FileMode.Create);
+
+		string[] directries = dataPath.Split ('/');
+		for (int i = 0; i < directries.Length-1; i++) {
+			string tmpPath = "";
+			for (int j = 0; j < i + 1; j++) {
+				tmpPath += directries [j] + "/";
+			}
+			tmpPath = tmpPath.Remove (tmpPath.Length - 1, 1);
+			if (!Directory.Exists (GetPath () + tmpPath)) {
+				Directory.CreateDirectory (GetPath () + tmpPath);
+			}
+		}
+		string existingString = OpenTextFile (GetPath () + dataPath);
+		FileStream fs;
+		if (existingString == "ERROR") {
+			fs = new FileStream (GetPath () + dataPath, FileMode.CreateNew);
+		} else {
+			fs = new FileStream (GetPath () + dataPath, FileMode.Create);
+		}
 		StreamWriter sw = new StreamWriter (fs);
 		sw.Write (stringData);
 		sw.Flush ();
@@ -110,35 +148,27 @@ public class CsvManager
 
 	public static void WriteData (string dataPath, string data)
 	{
-		string[] dataRows = data.Split('\n');
-		int rowCount = dataRows.Length;
-		int colCount = dataRows[0].Split(',').Length;
-		string[,] newData = new string[rowCount,colCount];
-
-		for(int i = 0; i<rowCount; i++){
-			string[] dataCols = dataRows[i].Split(',');
-			for(int j = 0; j<colCount; j++){
-				newData[i,j] = dataCols[j];
+		Debug.Log("[CsvManager.WriteData(string dataPath, string data)] called");
+		string[] directries = dataPath.Split ('/');
+		for (int i = 0; i < directries.Length-1; i++) {
+			string tmpPath = "";
+			for (int j = 0; j < i + 1; j++) {
+				tmpPath += directries [j] + "/";
+			}
+			tmpPath = tmpPath.Remove (tmpPath.Length - 1, 1);
+			if (!Directory.Exists (GetPath () + tmpPath)) {
+				Directory.CreateDirectory (GetPath () + tmpPath);
 			}
 		}
-
-
-		string stringData = "";
-		for (int i = 0; i < newData.GetLength (0); i++) {
-			for (int j = 0; j < newData.GetLength (1); j++) {
-				if (j < newData.GetLength (1) - 1) {
-					stringData += newData [i, j] + ",";
-				} else if (j == newData.GetLength (1) - 1 && i < newData.GetLength (0) - 1) {
-					stringData += newData [i, j] + "\n";
-				} else {
-					stringData += newData [i, j];
-				}
-			}
+		string existingString = OpenTextFile (GetPath () + dataPath);
+		FileStream fs;
+		if (existingString == "ERROR") {
+			fs = new FileStream (GetPath () + dataPath, FileMode.CreateNew);
+		} else {
+			fs = new FileStream (GetPath () + dataPath, FileMode.Create);
 		}
-		Debug.Log (GetPath () + dataPath);
-		FileStream fs = new FileStream (GetPath () + dataPath, FileMode.Create);
 		StreamWriter sw = new StreamWriter (fs);
-		sw.Write (stringData);
+		sw.Write (data);
 		sw.Flush ();
 		sw.Close ();
 	}
