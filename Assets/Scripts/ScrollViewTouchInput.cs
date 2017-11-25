@@ -65,7 +65,6 @@ public class ScrollViewTouchInput
 	{
 		Vector2 touchingCanvasPos = ScreenToCanvasPos (mousePos);
 		Vector2 touchedCanvasPos = ScreenToCanvasPos (touchedPos);
-		Debug.Log(touchingCanvasPos + " : " + touchedCanvasPos);
 
 		if (affordSize.x > Mathf.Abs(touchingCanvasPos.x - touchedCanvasPos.x)) {
 			if (affordSize.y > Mathf.Abs(touchingCanvasPos.y - touchedCanvasPos.y)) {
