@@ -4,7 +4,8 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
-public class PlaySceneController : MonoBehaviour {
+public class PlaySceneController : MonoBehaviour
+{
 	bool pause = true;
 	public GameObject gameover_image;
 	public GameObject joy_stick;
@@ -14,18 +15,32 @@ public class PlaySceneController : MonoBehaviour {
 	[SerializeField] int score = 0;
 	int point = 0;
 
-	void Start () {
+	void Start ()
+	{
 		Time.timeScale = 1;
-		//SceneManager.LoadScene("Stage", LoadSceneMode.Additive);
-		point = PlayerPrefs.GetInt("point", 0);
+		LoadScenes();
+		point = PlayerPrefs.GetInt ("point", 0);
 	}
 	
 	// Update is called once per frame
-	void Update () {
-		score_text.text = "Score : " + score.ToString();
+	void Update ()
+	{
+		score_text.text = "Score : " + score.ToString ();
 	}
 
-	public void PauseButton(){
+	private void LoadScenes ()
+	{
+		//"Stage"っていう名前のシーンが含まれていたらreturn
+		for (int i = 0; i < UnityEngine.SceneManagement.SceneManager.sceneCount; i++) {
+			string sceneName = UnityEngine.SceneManagement.SceneManager.GetSceneAt (i).name; 
+			if (sceneName == "Stage")
+				return;
+		}
+		SceneManager.LoadScene ("Stage", LoadSceneMode.Additive);
+	}
+
+	public void PauseButton ()
+	{
 		if (pause) {
 			pause = false;
 			pause_image.SetActive (true);
@@ -39,27 +54,36 @@ public class PlaySceneController : MonoBehaviour {
 		}
 	}
 
-	public void GameOver(){
+	public void GameOver ()
+	{
 		gameover_image.SetActive (true);
 		finish_score_text.text = "Score : " + score;
-		PlayerPrefs.SetInt("point", point + score);
+		PlayerPrefs.SetInt ("point", point + score);
 		if (DataManager.instance.Score < score) {
 			finish_score_text.text = "Score : " + score;
 			DataManager.instance.Score = score;
 		}
 	}
-	public void Retry(){	
+
+	public void Retry ()
+	{	
 		SceneManager.LoadScene ("Play");
 	}
-	public void Home(){
+
+	public void Home ()
+	{
 		Time.timeScale = 1;
 		SceneManager.LoadScene ("Title");
 	}
-	public void Animation(){
+
+	public void Animation ()
+	{
 		Time.timeScale = 1;
 		SceneManager.LoadScene ("AniamtionSelect");
 	}
-	public void CheckScore(int id,int count){
+
+	public void CheckScore (int id, int count)
+	{
 		switch (id) {
 		case 1:
 			score += 100 * count;
