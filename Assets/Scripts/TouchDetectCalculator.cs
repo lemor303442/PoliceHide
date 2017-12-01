@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ScrollViewTouchInput
+//ボタンを押しているのか、スクロールさせるのか判定
+public class TouchDetectCalculator
 {
-	//読み取るための値
+	//後悔するの値
 	public bool isScrollable{ get; private set; }
-
 	public bool isButtonFuncEnable{ get; private set; }
 
 
@@ -45,12 +45,10 @@ public class ScrollViewTouchInput
 				touchingTimer += Time.deltaTime;
 				if (touchingTimer < affordTime) {
 					if (!IsInAfforSize (Input.mousePosition, touchedPos)) {
-						Debug.Log("isScrollable true");
 						isScrollable = true;
 					}
 				} else {
 					isButtonFuncEnable = true;
-					Debug.Log("isScrollable false");
 				}
 			}
 		}

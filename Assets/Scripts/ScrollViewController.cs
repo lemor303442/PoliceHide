@@ -2,15 +2,31 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
+using UnityEngine.Events;
 
+public class IntUnityEvent : UnityEvent<int>
+{
+}
+
+//scrollViewに対する入力の取得、scrollViewを実際に動かす、ボタンの押した時のイベントを発火
 public class ScrollViewController : MonoBehaviour
 {
+	public IntUnityEvent OnButtonDown = new IntUnityEvent ();
+	public IntUnityEvent OnButtonUp = new IntUnityEvent ();
+
+
 
 	RectTransform scrollTargetRect;
 	float scrollViewWidth;
 
 	float screenRatio;
-	public CanvasScaler canvasScaler;
+	CanvasScaler canvasScaler;
+
+	bool isButtonDown;
+	bool isButtonUp;
+	int pressedButtonIndex;
+
 
 	Vector2 touchStartPos;
 	Vector2 touchEndPos;
@@ -39,11 +55,12 @@ public class ScrollViewController : MonoBehaviour
 	/// </summary>
 	private int scrollPhase = 5;
 
-	public ScrollViewTouchInput scrollViewTouchInput = new ScrollViewTouchInput ();
+	public TouchDetectCalculator touchDetectCalculator = new TouchDetectCalculator ();
 
 
 	void Start ()
 	{
+		canvasScaler = this.transform.GetComponentInParent<CanvasScaler> ();
 		//set screen ratio;
 		if (Screen.width * (canvasScaler.referenceResolution.y / canvasScaler.referenceResolution.x) <= Screen.height) {
 			screenRatio = canvasScaler.referenceResolution.x / Screen.width;
@@ -56,22 +73,44 @@ public class ScrollViewController : MonoBehaviour
 		SetMovableDistance ();
 
 		//ScrollViewTouchInputに初期値を渡す
-		scrollViewTouchInput.screenToCanvasRatio = screenRatio;
-		scrollViewTouchInput.canvasSize = new Vector2 (canvasScaler.referenceResolution.x, canvasScaler.referenceResolution.y);
-		scrollViewTouchInput.targetRect = this.gameObject.GetComponent<RectTransform> ();
-		scrollViewTouchInput.affordTime = 0.2f;
-		scrollViewTouchInput.affordSize = new Vector2 (30, 30);
+		touchDetectCalculator.screenToCanvasRatio = screenRatio;
+		touchDetectCalculator.canvasSize = new Vector2 (canvasScaler.referenceResolution.x, canvasScaler.referenceResolution.y);
+		touchDetectCalculator.targetRect = this.gameObject.GetComponent<RectTransform> ();
+		touchDetectCalculator.affordTime = 0.2f;
+		touchDetectCalculator.affordSize = new Vector2 (30, 30);
+
+		InstantiateAnimationButtons ();
+
+//		OnButtonDown.Invoke(3);
 	}
 
 
 	void Update ()
 	{
-		scrollViewTouchInput.Update ();
+		touchDetectCalculator.Update ();
+		EventFire ();
 
+		Move();
+	}
+
+	void EventFire ()
+	{
+		if (touchDetectCalculator.isButtonFuncEnable && isButtonDown) {
+			isButtonDown = false;
+			OnButtonDown.Invoke (pressedButtonIndex);
+		}
+		if (!touchDetectCalculator.isButtonFuncEnable && isButtonUp) {
+			isButtonUp = false;
+			OnButtonUp.Invoke (pressedButtonIndex);
+		}
+	}
+
+	void Move ()
+	{
 		switch (scrollPhase) {
 		case 0:
 			//待機中
-			if (scrollViewTouchInput.isScrollable)
+			if (touchDetectCalculator.isScrollable)
 				scrollPhase++;
 			break;
 		case 1:
@@ -137,10 +176,6 @@ public class ScrollViewController : MonoBehaviour
 		}
 	}
 
-	public void TestScrollTargetMove ()
-	{
-		this.GetComponent<RectTransform> ().localPosition += new Vector3 (-100, 0, 0);
-	}
 
 
 
@@ -222,8 +257,41 @@ public class ScrollViewController : MonoBehaviour
 		}
 	}
 
-	public void PointerDown ()
+
+
+	private void InstantiateAnimationButtons ()
 	{
-		Debug.Log ("Touched Down");
+		GameObject animationButton = Resources.Load ("Prefabs/AnimationButton") as GameObject;
+		DataManager dataManager = GameObject.FindObjectOfType<DataManager> ();
+		Transform animationButtonParent = this.transform.Find ("Content").transform;
+		for (int i = 0; i < dataManager.enabledAnimationIds.Length; i++) {
+			if (dataManager.enabledAnimationIds [i]) {
+				GameObject eventClone = Instantiate (animationButton, animationButtonParent) as GameObject;
+				var trigger = eventClone.GetComponent<EventTrigger> ();
+				trigger.triggers = new List<EventTrigger.Entry> ();
+
+				var eventPointerDown = new EventTrigger.Entry ();
+				eventPointerDown.eventID = EventTriggerType.PointerDown;
+				int buttonId = i + 1;
+				eventPointerDown.callback.AddListener ((x) => ButtonDown (buttonId));
+				trigger.triggers.Add (eventPointerDown);
+
+				var eventPointerUp = new EventTrigger.Entry ();
+				eventPointerUp.eventID = EventTriggerType.PointerUp;
+				eventPointerUp.callback.AddListener ((x) => ButtonUp (buttonId));
+				trigger.triggers.Add (eventPointerUp);
+			}
+		}
+	}
+
+	private void ButtonDown (int index)
+	{
+		isButtonDown = true;
+		pressedButtonIndex = index;
+	}
+
+	private void ButtonUp (int index)
+	{
+		isButtonUp = true;
 	}
 }
